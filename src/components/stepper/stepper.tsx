@@ -18,6 +18,8 @@ type StepperProps = {
   steps: StepperStep[];
   /** Small horizontal bar for lists and dashboards: no details or reasons. */
   compact?: boolean;
+  /** Keep the vertical list at every screen size, e.g. inside a narrow card. */
+  vertical?: boolean;
   className?: string;
 };
 
@@ -32,13 +34,22 @@ const statusText: Record<StepStatus, string> = {
 /**
  * The "Fair Steps" progress stepper, FairStep's signature component.
  * Full mode: a vertical list on mobile and a horizontal row from the md breakpoint.
+ * Vertical mode: always the vertical list.
  * Compact mode: always a small horizontal row.
  */
-export function Stepper({ steps, compact = false, className }: StepperProps) {
+export function Stepper({ steps, compact = false, vertical = false, className }: StepperProps) {
+  const layout: Layout = compact ? "compact" : vertical ? "vertical" : "responsive";
+
   return (
     <ol
       aria-label="Case progress"
-      className={cn("flex", compact ? "flex-row" : "flex-col md:flex-row", className)}
+      className={cn(
+        "flex",
+        layout === "compact" && "flex-row",
+        layout === "vertical" && "flex-col",
+        layout === "responsive" && "flex-col md:flex-row",
+        className,
+      )}
     >
       {steps.map((step, index) => {
         const isLast = index === steps.length - 1;
@@ -48,15 +59,23 @@ export function Stepper({ steps, compact = false, className }: StepperProps) {
             aria-current={step.status === "current" ? "step" : undefined}
             className={cn(
               "relative flex flex-1",
-              compact
-                ? "flex-col items-center text-center"
-                : "gap-3 pb-6 last:pb-0 md:flex-col md:items-center md:gap-2 md:pb-0 md:text-center",
+              layout === "compact" && "flex-col items-center text-center",
+              layout !== "compact" && "gap-3 pb-6 last:pb-0",
+              layout === "responsive" &&
+                "md:flex-col md:items-center md:gap-2 md:pb-0 md:text-center",
             )}
           >
-            {!isLast && <Connector done={step.status === "completed"} compact={compact} />}
+            {!isLast && <Connector done={step.status === "completed"} layout={layout} />}
             <StepCircle status={step.status} number={index + 1} compact={compact} />
 
-            <div className={cn("min-w-0", compact ? "mt-1" : "pt-1 md:pt-0")}>
+            <div
+              className={cn(
+                "min-w-0",
+                layout === "compact" && "mt-1",
+                layout === "vertical" && "pt-1",
+                layout === "responsive" && "pt-1 md:pt-0",
+              )}
+            >
               <p
                 className={cn(
                   compact ? "hidden text-xs sm:block" : "text-sm",
@@ -75,7 +94,12 @@ export function Stepper({ steps, compact = false, className }: StepperProps) {
 
               {!compact && step.detail && <p className="text-xs text-muted">{step.detail}</p>}
               {!compact && step.status === "blocked" && step.reason && (
-                <p className="mt-1 max-w-56 rounded-lg bg-warning-tint px-2 py-1 text-xs text-warning-strong md:mx-auto">
+                <p
+                  className={cn(
+                    "mt-1 max-w-56 rounded-lg bg-warning-tint px-2 py-1 text-xs text-warning-strong",
+                    layout === "responsive" && "md:mx-auto",
+                  )}
+                >
                   {step.reason}
                 </p>
               )}
@@ -119,17 +143,20 @@ function StepCircle({
 }
 
 /** The line joining a step to the next one: teal once the step is done. */
-function Connector({ done, compact }: { done: boolean; compact: boolean }) {
+function Connector({ done, layout }: { done: boolean; layout: Layout }) {
   return (
     <span
       aria-hidden
       className={cn(
         "absolute",
         done ? "bg-primary" : "bg-line",
-        compact
-          ? "top-3 right-[calc(-50%+14px)] left-[calc(50%+14px)] h-0.5"
-          : "top-9 bottom-1 left-[15px] w-0.5 md:top-4 md:right-[calc(-50%+20px)] md:bottom-auto md:left-[calc(50%+20px)] md:h-0.5 md:w-auto",
+        layout === "compact" && "top-3 right-[calc(-50%+14px)] left-[calc(50%+14px)] h-0.5",
+        layout !== "compact" && "top-9 bottom-1 left-[15px] w-0.5",
+        layout === "responsive" &&
+          "md:top-4 md:right-[calc(-50%+20px)] md:bottom-auto md:left-[calc(50%+20px)] md:h-0.5 md:w-auto",
       )}
     />
   );
 }
+
+type Layout = "responsive" | "vertical" | "compact";
