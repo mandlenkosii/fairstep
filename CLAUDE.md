@@ -28,7 +28,7 @@ Next.js (App Router) + TypeScript strict + Tailwind · Supabase (Postgres, Auth,
 - Tokens in `src/app/globals.css` (`bg-primary`, `text-muted`, `border-line`, `bg-paper`, `text-warning-strong`…). Ochre `accent` is for rings/dots only, never text.
 - Components: `src/components/ui` (Button, ButtonLink, Badge, Card, Field + Input/Textarea/Select), `stepper/Stepper` (`vertical`, `compact`), `shell/AppShell` (role nav), `shell/Disclaimer`.
 - Validation: zod schemas in `src/lib/validation/`, reused by forms and server actions.
-- `npm test` runs `scripts/vitest.mjs` (fixes Vitest on a lowercase `c:\` Windows path). Markdown is excluded from Prettier.
+- `npm run dev/build/start/test` go through `scripts/run.mjs`, which fixes Next.js (500 errors) and Vitest failing on a lowercase `c:\` Windows path. Markdown is excluded from Prettier.
 - Checks before a PR: `npm run lint`, `npm run format:check`, `npm run typecheck`, `npm test`, `npm run build`.
 
 ## Roles
