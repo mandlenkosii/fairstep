@@ -2,6 +2,8 @@
 
 **Every step fair. Every step on record.**
 
+[![CI](https://github.com/mandlenkosii/fairstep/actions/workflows/ci.yml/badge.svg)](https://github.com/mandlenkosii/fairstep/actions/workflows/ci.yml)
+
 FairStep helps small business owners run fair, fully documented disciplinary processes, so they stop losing CCMA cases on procedure.
 
 > **Status:** Capstone in progress. Final submission due Wed 25 Nov 2026, 15:30 SAST.
