@@ -7,7 +7,8 @@ Key docs: [BUSINESS.md](BUSINESS.md), [docs/PRD.md](docs/PRD.md) (roles, rules R
 
 ## Current phase
 **Phase 0 (done):** business docs, PRD, Stitch prompts, public repo https://github.com/mandlenkosii/fairstep
-**Phase 1 (in progress):** waiting for Stitch exports in docs/designs/ and the Stitch share link, then update the README.
+**Phase 1 (done):** Stitch exports in docs/designs/ (named `NN-screen-device.png`, tokens in `design-system.md`), Stitch link and design gallery in README. Design copy that conflicts with the PRD (e.g. "Schedule 8", "48 hours", crypto claims, ACAS) is not used.
+**Phase 2 (next):** IMPLEMENTATION_PLAN.md via PR, issues + labels + milestones, scaffold, design system components.
 
 | Phase | Due (SAST) | Scope |
 |---|---|---|
