@@ -8,7 +8,8 @@ Key docs: [BUSINESS.md](BUSINESS.md), [docs/PRD.md](docs/PRD.md) (roles, rules R
 ## Current phase
 **Phase 0 (done):** business docs, PRD, Stitch prompts, public repo https://github.com/mandlenkosii/fairstep
 **Phase 1 (done):** Stitch exports in docs/designs/ (named `NN-screen-device.png`, tokens in `design-system.md`), Stitch link and design gallery in README. Design copy that conflicts with the PRD (e.g. "Schedule 8", "48 hours", crypto claims, ACAS) is not used.
-**Phase 2 (next):** IMPLEMENTATION_PLAN.md via PR, issues + labels + milestones, scaffold, design system components.
+**Phase 2 (done):** IMPLEMENTATION_PLAN.md, issues #1–#34 with labels and 6 milestones, scaffold, CI, design tokens, UI components, stepper, app shell, landing page, log-in/sign-up screens (PRs #35–#43).
+**Phase 3 (next):** issues #11–#19 (Supabase, schema, RLS, storage, auth, route protection, seed, RLS tests, workflow rules).
 
 | Phase | Due (SAST) | Scope |
 |---|---|---|
@@ -21,6 +22,14 @@ Key docs: [BUSINESS.md](BUSINESS.md), [docs/PRD.md](docs/PRD.md) (roles, rules R
 
 ## Stack
 Next.js (App Router) + TypeScript strict + Tailwind · Supabase (Postgres, Auth, Storage, RLS; migrations in `supabase/migrations`, `supabase/seed.sql`) · Server Actions with zod · @react-pdf/renderer · Vitest + RTL · Playwright · ESLint + Prettier · GitHub Actions · Vercel.
+
+## Code notes
+- **Next.js 16**: read `node_modules/next/dist/docs/` before using an API. Middleware is now `src/proxy.ts`. `cacheComponents` is off on purpose (pages read the session).
+- Tokens in `src/app/globals.css` (`bg-primary`, `text-muted`, `border-line`, `bg-paper`, `text-warning-strong`…). Ochre `accent` is for rings/dots only, never text.
+- Components: `src/components/ui` (Button, ButtonLink, Badge, Card, Field + Input/Textarea/Select), `stepper/Stepper` (`vertical`, `compact`), `shell/AppShell` (role nav), `shell/Disclaimer`.
+- Validation: zod schemas in `src/lib/validation/`, reused by forms and server actions.
+- `npm test` runs `scripts/vitest.mjs` (fixes Vitest on a lowercase `c:\` Windows path). Markdown is excluded from Prettier.
+- Checks before a PR: `npm run lint`, `npm run format:check`, `npm run typecheck`, `npm test`, `npm run build`.
 
 ## Roles
 - `business_owner`: only businesses they're a member of (`business_members`).
