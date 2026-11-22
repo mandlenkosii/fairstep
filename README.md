@@ -13,7 +13,7 @@ FairStep helps small business owners run fair, fully documented disciplinary pro
 | Business case           | [BUSINESS.md](BUSINESS.md)                                                                    |
 | Product requirements    | [docs/PRD.md](docs/PRD.md)                                                                    |
 | Stitch prompts          | [docs/stitch-prompts.md](docs/stitch-prompts.md)                                              |
-| Implementation plan     | _IMPLEMENTATION_PLAN.md (Phase 2)_                                                            |
+| Implementation plan     | [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) |
 
 ## The problem
 
