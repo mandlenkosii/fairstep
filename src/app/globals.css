@@ -1,1 +1,73 @@
 @import "tailwindcss";
+
+/*
+ * FairStep design tokens, from docs/designs/design-system.md.
+ * Each token becomes Tailwind classes, e.g. --color-primary → bg-primary, text-primary.
+ */
+@theme {
+  /* Brand */
+  --color-primary: #0e5e5a; /* Fair Teal: primary buttons, active states, links */
+  --color-primary-hover: #0a4744;
+  --color-primary-tint: #e3f0ee; /* selected rows, subtle highlights */
+  --color-accent: #c9861a; /* Ochre: current-step ring and dots only, never text (contrast 3:1) */
+
+  /* Neutrals */
+  --color-ink: #1c2b2a; /* headings and body text */
+  --color-muted: #5b6b69; /* secondary text */
+  --color-paper: #f7f5f0; /* page background */
+  --color-surface: #ffffff; /* cards, modals, forms */
+  --color-line: #e3ded3; /* borders and dividers */
+
+  /* Status. The *-strong shades are for small text on tints (WCAG AA 4.5:1). */
+  --color-success: #2e7d4f;
+  --color-success-strong: #256b42;
+  --color-success-tint: #eaf2ec;
+  --color-warning: #b7791f;
+  --color-warning-strong: #8a5a12;
+  --color-warning-tint: #f8f2e9;
+  --color-danger: #b3261e;
+  --color-danger-tint: #f8eae9;
+  --color-info: #2b6cb0;
+  --color-info-tint: #eaf0f7;
+
+  /* Type: Source Serif 4 for headings, Inter for UI (loaded in layout.tsx) */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-source-serif), ui-serif, Georgia, serif;
+
+  --text-display: 2rem;
+  --text-display--line-height: 2.5rem;
+  --text-headline-lg: 1.5rem;
+  --text-headline-lg--line-height: 2rem;
+  --text-headline-md: 1.25rem;
+  --text-headline-md--line-height: 1.75rem;
+  --text-headline-sm: 1.125rem;
+  --text-headline-sm--line-height: 1.5rem;
+
+  /* Shape: Tailwind's rounded-lg (8px) for inputs/buttons and rounded-xl (12px) for cards match the design. */
+  --shadow-card: 0 1px 2px rgb(28 43 42 / 0.06);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-paper font-sans text-ink;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-serif font-semibold text-ink;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+}
+
+/* Small uppercase label used above stats and form sections. */
+@utility label-caps {
+  @apply text-xs font-semibold tracking-[0.04em] uppercase;
+}
