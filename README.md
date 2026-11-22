@@ -27,6 +27,12 @@ A business with 8 employees has no HR department and can't pay a lawyer for ever
 
 FairStep is a mobile-first case manager. It guides an owner from **incident → investigation → notice of hearing → hearing → outcome → appeal**, in line with the 2025 *Code of Good Practice: Dismissal*. It **blocks unfair steps** and explains why in plain language. It generates the letters, lets the owner's labour consultant review and sign off the case, and exports the whole case as a timestamped, **CCMA-ready bundle**.
 
+## Designs
+
+Designed in Google Stitch (link above) from the prompts in [docs/stitch-prompts.md](docs/stitch-prompts.md). All exports are in [`docs/designs/`](docs/designs/).
+
+_Screenshots are added once the Stitch exports are in._
+
 ## Who it's for
 
 | Role | What they do |

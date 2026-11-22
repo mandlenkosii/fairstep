@@ -6,8 +6,8 @@ FairStep: "Every step fair. Every step on record." A disciplinary-process and ca
 Key docs: [BUSINESS.md](BUSINESS.md), [docs/PRD.md](docs/PRD.md) (roles, rules R1–R11, ERD, permission matrix), [docs/stitch-prompts.md](docs/stitch-prompts.md), docs/designs/ (Stitch exports, the source of truth for UI).
 
 ## Current phase
-**Phase 0 (done):** business docs, PRD, Stitch prompts, public repo.
-Next: Phase 1 (Mon 10:00): Stitch link + designs in README.
+**Phase 0 (done):** business docs, PRD, Stitch prompts, public repo https://github.com/mandlenkosii/fairstep
+**Phase 1 (in progress):** waiting for Stitch exports in docs/designs/ and the Stitch share link, then update the README.
 
 | Phase | Due (SAST) | Scope |
 |---|---|---|
@@ -35,6 +35,7 @@ Enforce with **RLS on every table + server-side checks**. Hidden buttons are not
 - Dates stored UTC, displayed SAST. Currency ZAR ("R149").
 - UI copy: plain SA English, second person, no legalese. Disclaimer "not legal advice" in app footer, PDFs and docs.
 - Git: one Issue per task → branch `feat/<issue#>-short-name` (or `chore/`, `docs/`, `test/`) → PR with "Closes #n" → merge only when CI is green. Conventional commits, small.
+- **Mandla is the sole author of every commit and PR.** No `Co-Authored-By` trailers, no "Generated with Claude Code" lines in commits or PR bodies.
 - Never commit secrets; `.env.local` is gitignored; keep `.env.example` updated.
 - Seed data: fictional SA names/businesses (Kasi Kitchen, Ubuntu Guard Security, Ezulwini Spaza & Groceries, Bakwena Build Contractors; owner Thabo Mokoena; consultant Naledi Dlamini).
 - Working style: show a short plan before each phase; stop at phase end with summary, files changed, manual steps; explain key code in plain language.
