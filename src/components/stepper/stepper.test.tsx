@@ -62,6 +62,13 @@ describe("Stepper", () => {
     expect(screen.getByText("(optional)")).toBeInTheDocument();
   });
 
+  it("can stay vertical at every screen size", () => {
+    render(<Stepper steps={steps} vertical />);
+    const list = screen.getByRole("list", { name: "Case progress" });
+    expect(list).toHaveClass("flex-col");
+    expect(list).not.toHaveClass("md:flex-row");
+  });
+
   it("can be shown as a compact bar without details", () => {
     render(<Stepper steps={steps} compact />);
     expect(screen.queryByText("Thu 26 Nov, 10:00")).not.toBeInTheDocument();
