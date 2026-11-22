@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "node scripts/run.mjs next dev",
+    "build": "node scripts/run.mjs next build",
+    "start": "node scripts/run.mjs next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
-    "test": "node scripts/vitest.mjs run",
-    "test:watch": "node scripts/vitest.mjs",
+    "test": "node scripts/run.mjs vitest run",
+    "test:watch": "node scripts/run.mjs vitest",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
