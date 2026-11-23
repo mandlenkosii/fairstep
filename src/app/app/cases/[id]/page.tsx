@@ -15,7 +15,10 @@ import { CATEGORY_LABEL, type IncidentCategory } from "@/lib/validation/incident
 import { canTransition, nextSteps } from "@/lib/workflow/rules";
 import type { Step } from "@/lib/workflow/types";
 import { buildStepperSteps, caseToWorkflow, eventLabel, STEP_LABEL } from "@/lib/workflow/view";
-import { advanceCase } from "../actions";
+import { advanceCase, saveStep } from "../actions";
+import { CaseRecord } from "@/components/cases/case-record";
+import { StepForm } from "@/components/cases/step-form";
+import { RECORDABLE_STEPS, stepDefaults, type RecordableStep } from "@/lib/validation/steps";
 
 export const metadata: Metadata = { title: "Case" };
 
@@ -65,6 +68,11 @@ export default async function CasePage({ params, searchParams }: PageProps<"/app
       }));
   const review = REVIEW_STATUS[row.review_status] ?? REVIEW_STATUS.not_requested;
   const moved = typeof query.moved === "string" ? STEP_LABEL[query.moved as Step] : undefined;
+  const recorded =
+    typeof query.recorded === "string" ? STEP_LABEL[query.recorded as Step] : undefined;
+  const recordable = (RECORDABLE_STEPS as string[]).includes(workflow.currentStep)
+    ? (workflow.currentStep as RecordableStep)
+    : null;
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 md:px-8">
@@ -83,6 +91,7 @@ export default async function CasePage({ params, searchParams }: PageProps<"/app
         </Notice>
       )}
       {moved && <Notice>Case moved to {moved}.</Notice>}
+      {recorded && <Notice>{recorded} details saved. Check what’s next below.</Notice>}
 
       <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
         <div>
@@ -108,6 +117,25 @@ export default async function CasePage({ params, searchParams }: PageProps<"/app
         </div>
         <Stepper steps={steps} />
       </Card>
+
+      {recordable && (
+        <section aria-labelledby="record-heading" className="mt-6">
+          <Card>
+            <CardTitle id="record-heading">
+              Record the {STEP_LABEL[recordable].toLowerCase()}
+            </CardTitle>
+            <p className="mt-1 mb-5 text-sm text-muted">
+              Save as you go. FairStep checks the rules when you move the case on.
+            </p>
+            <StepForm
+              key={recordable}
+              step={recordable}
+              action={saveStep.bind(null, row.id, recordable)}
+              defaults={stepDefaults(recordable, row)}
+            />
+          </Card>
+        </section>
+      )}
 
       <section aria-labelledby="next-heading" className="mt-6">
         <Card>
@@ -169,6 +197,7 @@ export default async function CasePage({ params, searchParams }: PageProps<"/app
 
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
         <div className="flex flex-col gap-6 lg:col-span-1">
+          <CaseRecord workflow={workflow} />
           {incident && (
             <Card>
               <CardTitle>Incident</CardTitle>

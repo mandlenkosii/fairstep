@@ -3,8 +3,16 @@
 import { redirect } from "next/navigation";
 import { requireOwnerBusiness } from "@/lib/auth/session";
 import { openCase } from "@/lib/cases/open-case";
+import { readForm, SAVE_FAILED, type FormState } from "@/lib/forms";
+import type { Json } from "@/lib/supabase/database.types";
 import { one } from "@/lib/supabase/one";
 import { createClient } from "@/lib/supabase/server";
+import {
+  parseStep,
+  RECORDABLE_STEPS,
+  STEP_FIELDS,
+  type RecordableStep,
+} from "@/lib/validation/steps";
 import { canTransition } from "@/lib/workflow/rules";
 import { STEP_ORDER } from "@/lib/workflow/rules.config";
 import type { Step } from "@/lib/workflow/types";
@@ -64,4 +72,62 @@ export async function advanceCase(caseId: string, to: Step) {
     payload: { from: row.current_step, to },
   });
   redirect(`/app/cases/${caseId}?moved=${to}`);
+}
+
+export type StepFormState = FormState;
+
+/**
+ * Saves the details of the step the case is on (investigation, notice, …).
+ * Moving on is separate (advanceCase), so the rules can say what's still missing.
+ */
+export async function saveStep(
+  caseId: string,
+  step: RecordableStep,
+  _prev: StepFormState,
+  formData: FormData,
+): Promise<StepFormState> {
+  const { user, business } = await requireOwnerBusiness();
+  if (!RECORDABLE_STEPS.includes(step)) return { formError: "Unknown step." };
+  const values = readForm(formData, STEP_FIELDS[step]);
+
+  const supabase = await createClient();
+  const { data: row } = await supabase
+    .from("cases")
+    .select("id, current_step, closed_at, step_data")
+    .eq("id", caseId)
+    .eq("business_id", business.id)
+    .maybeSingle();
+  if (!row) return { formError: "We couldn't find that case.", values };
+  if (row.closed_at) {
+    return { formError: "This case is closed. Add a note instead of changing the record.", values };
+  }
+  if (row.current_step !== step) {
+    return { formError: "You can only record details for the step the case is on.", values };
+  }
+
+  const parsed = parseStep(step, values);
+  if (!parsed.ok) return { fieldErrors: parsed.fieldErrors, values };
+
+  const stepData =
+    row.step_data && typeof row.step_data === "object" && !Array.isArray(row.step_data)
+      ? row.step_data
+      : {};
+  const { error } = await supabase
+    .from("cases")
+    .update({
+      ...parsed.data.columns,
+      step_data: { ...stepData, [step]: parsed.data.section } as { [key: string]: Json },
+    })
+    .eq("id", caseId)
+    .eq("business_id", business.id);
+  if (error) return { formError: SAVE_FAILED, values };
+
+  await supabase.from("case_events").insert({
+    case_id: caseId,
+    business_id: business.id,
+    actor_id: user.id,
+    event_type: "step.recorded",
+    payload: { step },
+  });
+  redirect(`/app/cases/${caseId}?recorded=${step}`);
 }

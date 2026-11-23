@@ -81,6 +81,9 @@ describe("eventLabel", () => {
       "Moved the case to Notice of hearing",
     );
     expect(eventLabel("review.changes_requested", {})).toBe("Requested changes");
+    expect(eventLabel("step.recorded", { step: "notice" })).toBe(
+      "Recorded the notice of hearing details",
+    );
     expect(eventLabel("something.new", {})).toBe("Updated the case");
   });
 });

@@ -132,6 +132,10 @@ export function eventLabel(type: string, payload: unknown): string {
       const to = String(data.to ?? "");
       return `Moved the case to ${STEP_LABEL[to as Step] ?? "the next step"}`;
     }
+    case "step.recorded": {
+      const step = String(data.step ?? "");
+      return `Recorded the ${(STEP_LABEL[step as Step] ?? "step").toLowerCase()} details`;
+    }
     case "review.requested":
       return "Sent the case for review";
     case "review.approved":
