@@ -60,3 +60,15 @@ export async function requireRole(role: Role): Promise<SessionUser> {
   if (user.role !== role) redirect(homeFor(user.role));
   return user;
 }
+
+/**
+ * For owner pages and actions: the owner and the business they're working in.
+ * FairStep's MVP has one business per owner, so it's their first membership.
+ */
+export async function requireOwnerBusiness() {
+  const user = await requireRole("business_owner");
+  const business = user.businesses[0];
+  if (!business)
+    throw new Error("This account isn't linked to a business yet. Contact FairStep support.");
+  return { user, business };
+}
