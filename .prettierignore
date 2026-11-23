@@ -10,3 +10,4 @@ test-results
 supabase/.temp
 docs/designs
 *.md
+src/lib/supabase/database.types.ts
