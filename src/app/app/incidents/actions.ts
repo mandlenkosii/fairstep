@@ -1,6 +1,7 @@
 "use server";
 
 import { requireOwnerBusiness } from "@/lib/auth/session";
+import { openCase } from "@/lib/cases/open-case";
 import { fieldErrors, readForm, SAVE_FAILED, type FormState } from "@/lib/forms";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -13,7 +14,7 @@ import {
 
 export type IncidentFormState = FormState & {
   /** Set once the incident is saved, so the browser can upload the evidence. */
-  saved?: { incidentId: string; businessId: string };
+  saved?: { incidentId: string; businessId: string; caseId?: string };
 };
 
 export async function createIncident(
@@ -53,7 +54,18 @@ export async function createIncident(
     .single();
   if (error || !data) return { formError: SAVE_FAILED, values };
 
-  return { saved: { incidentId: data.id, businessId: business.id } };
+  // "Start a disciplinary case from this incident" was ticked.
+  let caseId: string | undefined;
+  if (formData.get("startCase") === "on") {
+    const opened = await openCase(supabase, {
+      businessId: business.id,
+      userId: user.id,
+      incidentId: data.id,
+    });
+    if ("caseId" in opened) caseId = opened.caseId;
+  }
+
+  return { saved: { incidentId: data.id, businessId: business.id, caseId } };
 }
 
 /**

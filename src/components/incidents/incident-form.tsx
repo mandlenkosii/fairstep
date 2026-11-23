@@ -30,10 +30,14 @@ export function IncidentForm({ action, employees, defaults }: IncidentFormProps)
     async (prev: IncidentFormState, formData: FormData) => {
       const result = await action(prev, formData);
       if (!result.saved) return result;
-      const { incidentId, businessId } = result.saved;
+      const { incidentId, businessId, caseId } = result.saved;
       const upload = await uploadEvidence(businessId, incidentId, files);
-      const query = upload.error ? "saved=logged&evidence=failed" : "saved=logged";
-      router.push(`/app/incidents/${incidentId}?${query}`);
+      if (caseId && !upload.error) {
+        router.push(`/app/cases/${caseId}?opened=1`);
+      } else {
+        const query = upload.error ? "saved=logged&evidence=failed" : "saved=logged";
+        router.push(`/app/incidents/${incidentId}?${query}`);
+      }
       return result;
     },
     {},
@@ -150,6 +154,24 @@ export function IncidentForm({ action, employees, defaults }: IncidentFormProps)
           disabled={busy}
         />
       </div>
+
+      <label className="flex cursor-pointer gap-3 rounded-xl border border-primary/30 bg-primary-tint p-4">
+        <input
+          type="checkbox"
+          name="startCase"
+          defaultChecked={value("startCase") === "on"}
+          className="mt-1 size-5 shrink-0 accent-primary"
+        />
+        <span>
+          <span className="block font-semibold text-ink">
+            Start a disciplinary case from this incident
+          </span>
+          <span className="block text-sm text-muted">
+            Opens a case with its own reference and takes you to the investigation step. You can
+            also do this later.
+          </span>
+        </span>
+      </label>
 
       <div className="flex gap-3 rounded-xl bg-warning-tint p-4 text-sm">
         <Lightbulb aria-hidden className="mt-0.5 size-5 shrink-0 text-warning-strong" />
