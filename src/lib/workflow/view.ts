@@ -142,8 +142,16 @@ export function eventLabel(type: string, payload: unknown): string {
       return "Approved the case";
     case "review.changes_requested":
       return "Requested changes";
-    case "document.generated":
-      return "Generated a document";
+    case "document.generated": {
+      const names: Record<string, string> = {
+        notice: "notice of hearing",
+        warning: "written warning",
+        final_warning: "final written warning",
+        outcome: "outcome letter",
+        bundle: "case bundle",
+      };
+      return `Generated the ${names[String(data.kind)] ?? "document"}`;
+    }
     default:
       return "Updated the case";
   }
