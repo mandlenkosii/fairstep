@@ -10,7 +10,9 @@ import {
   LETTER_LABEL,
   type LetterKind,
 } from "@/lib/documents/letters";
-import { readForm, SAVE_FAILED, type FormState } from "@/lib/forms";
+import { fieldErrors, readForm, SAVE_FAILED, type FormState } from "@/lib/forms";
+import { addCaseComment } from "@/lib/cases/comments";
+import { commentSchema } from "@/lib/validation/review";
 import type { Json } from "@/lib/supabase/database.types";
 import { one } from "@/lib/supabase/one";
 import { createClient } from "@/lib/supabase/server";
@@ -210,4 +212,89 @@ export async function generateLetter(caseId: string, kind: LetterKind) {
     payload: { kind, document_id: doc.id },
   });
   redirect(`/app/cases/${caseId}?generated=${kind}`);
+}
+
+export async function addOwnerComment(
+  caseId: string,
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const { user, business } = await requireOwnerBusiness();
+  const values = readForm(formData, ["body"]);
+  const parsed = commentSchema.safeParse(values);
+  if (!parsed.success) return { fieldErrors: fieldErrors(parsed.error), values };
+
+  const supabase = await createClient();
+  const added = await addCaseComment(supabase, {
+    caseId,
+    businessId: business.id,
+    authorId: user.id,
+    body: parsed.data.body,
+  });
+  if (!added) return { formError: SAVE_FAILED, values };
+  redirect(`/app/cases/${caseId}?commented=1`);
+}
+
+/** Sends the case to the business's assigned consultant for review. */
+export async function requestReview(
+  caseId: string,
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const { user, business } = await requireOwnerBusiness();
+  const values = readForm(formData, ["body"]);
+  const note = values.body.trim();
+  if (note.length > 4000)
+    return { fieldErrors: { body: "Use 4,000 characters or fewer." }, values };
+
+  const supabase = await createClient();
+  const [{ data: row }, { count: consultants }] = await Promise.all([
+    supabase
+      .from("cases")
+      .select("id, review_status, closed_at")
+      .eq("id", caseId)
+      .eq("business_id", business.id)
+      .maybeSingle(),
+    supabase
+      .from("consultant_assignments")
+      .select("consultant_id", { count: "exact", head: true })
+      .eq("business_id", business.id),
+  ]);
+  if (!row) return { formError: "We couldn't find that case.", values };
+  if (row.closed_at) return { formError: "This case is closed.", values };
+  if (!consultants) {
+    return {
+      formError:
+        "No consultant is assigned to your business yet. Contact FairStep to be linked to one.",
+      values,
+    };
+  }
+  if (!["not_requested", "changes_requested"].includes(row.review_status)) {
+    return { formError: "This case is already with your consultant.", values };
+  }
+
+  if (note) {
+    await addCaseComment(supabase, {
+      caseId,
+      businessId: business.id,
+      authorId: user.id,
+      body: note,
+    });
+  }
+  // The database trigger also checks owners can only move a case to pending_review.
+  const { error } = await supabase
+    .from("cases")
+    .update({ review_status: "pending_review" })
+    .eq("id", caseId)
+    .eq("business_id", business.id);
+  if (error) return { formError: SAVE_FAILED, values };
+
+  await supabase.from("case_events").insert({
+    case_id: caseId,
+    business_id: business.id,
+    actor_id: user.id,
+    event_type: "review.requested",
+    payload: {},
+  });
+  redirect(`/app/cases/${caseId}?review=sent`);
 }
