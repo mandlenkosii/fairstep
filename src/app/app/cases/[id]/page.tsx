@@ -16,7 +16,9 @@ import { canTransition, nextSteps } from "@/lib/workflow/rules";
 import type { Step } from "@/lib/workflow/types";
 import { buildStepperSteps, caseToWorkflow, eventLabel, STEP_LABEL } from "@/lib/workflow/view";
 import { advanceCase, saveStep } from "../actions";
+import { CaseDocuments } from "@/components/cases/case-documents";
 import { CaseRecord } from "@/components/cases/case-record";
+import { LETTER_LABEL, type LetterKind } from "@/lib/documents/letters";
 import { StepForm } from "@/components/cases/step-form";
 import { RECORDABLE_STEPS, stepDefaults, type RecordableStep } from "@/lib/validation/steps";
 
@@ -41,7 +43,7 @@ export default async function CasePage({ params, searchParams }: PageProps<"/app
     .maybeSingle();
   if (!row) notFound();
 
-  const [{ data: events }, { data: comments }] = await Promise.all([
+  const [{ data: events }, { data: comments }, { data: docs }] = await Promise.all([
     supabase
       .from("case_events")
       .select("id, event_type, payload, created_at, actor:profiles (full_name, role)")
@@ -52,7 +54,25 @@ export default async function CasePage({ params, searchParams }: PageProps<"/app
       .select("id, body, created_at, author:profiles (full_name, role)")
       .eq("case_id", id)
       .order("created_at"),
+    supabase
+      .from("documents")
+      .select("id, kind, file_name, created_at, storage_path")
+      .eq("case_id", id)
+      .neq("kind", "evidence")
+      .is("archived_at", null)
+      .order("created_at", { ascending: false }),
   ]);
+  // Private files: links that expire after 10 minutes.
+  const signed = docs?.length
+    ? (
+        await supabase.storage.from("documents").createSignedUrls(
+          docs.map((d) => d.storage_path),
+          600,
+        )
+      ).data
+    : [];
+  const urlFor = new Map((signed ?? []).map((s) => [s.path, s.signedUrl]));
+  const documents = (docs ?? []).map((d) => ({ ...d, url: urlFor.get(d.storage_path) }));
 
   const employee = one(row.employee);
   const incident = one(row.incident);
@@ -92,6 +112,12 @@ export default async function CasePage({ params, searchParams }: PageProps<"/app
       )}
       {moved && <Notice>Case moved to {moved}.</Notice>}
       {recorded && <Notice>{recorded} details saved. Check what’s next below.</Notice>}
+      {typeof query.generated === "string" && (
+        <Notice>
+          {LETTER_LABEL[query.generated as LetterKind] ?? "Document"} generated. Open it below,
+          print it and give it to the employee.
+        </Notice>
+      )}
 
       <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
         <div>
@@ -197,6 +223,7 @@ export default async function CasePage({ params, searchParams }: PageProps<"/app
 
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
         <div className="flex flex-col gap-6 lg:col-span-1">
+          <CaseDocuments caseId={row.id} workflow={workflow} documents={documents} canGenerate />
           <CaseRecord workflow={workflow} />
           {incident && (
             <Card>

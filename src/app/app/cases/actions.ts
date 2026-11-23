@@ -3,6 +3,13 @@
 import { redirect } from "next/navigation";
 import { requireOwnerBusiness } from "@/lib/auth/session";
 import { openCase } from "@/lib/cases/open-case";
+import { renderLetter } from "@/lib/documents/letter-pdf";
+import {
+  buildLetter,
+  documentReadiness,
+  LETTER_LABEL,
+  type LetterKind,
+} from "@/lib/documents/letters";
 import { readForm, SAVE_FAILED, type FormState } from "@/lib/forms";
 import type { Json } from "@/lib/supabase/database.types";
 import { one } from "@/lib/supabase/one";
@@ -130,4 +137,77 @@ export async function saveStep(
     payload: { step },
   });
   redirect(`/app/cases/${caseId}?recorded=${step}`);
+}
+
+/**
+ * Generates a letter as a PDF on the server, saves it to the private
+ * "documents" bucket and records it on the case. Refused unless the
+ * workflow rules for that letter pass (e.g. R2–R5 for a notice).
+ */
+export async function generateLetter(caseId: string, kind: LetterKind) {
+  const { user, business } = await requireOwnerBusiness();
+  if (!(kind in LETTER_LABEL)) throw new Error("Unknown letter.");
+
+  const supabase = await createClient();
+  const { data: row } = await supabase
+    .from("cases")
+    .select(
+      "id, reference, current_step, closed_at, complainant_name, chairperson_name, step_data, employee:employees (first_name, last_name, job_title, employee_number), incident:incidents (occurred_at, witnesses)",
+    )
+    .eq("id", caseId)
+    .eq("business_id", business.id)
+    .maybeSingle();
+  if (!row) throw new Error("We couldn't find that case.");
+
+  const now = new Date();
+  const workflow = caseToWorkflow({ ...row, incident: one(row.incident) });
+  if (!documentReadiness(workflow, kind, now).ok)
+    redirect(`/app/cases/${caseId}?docblocked=${kind}`);
+
+  const employee = one(row.employee);
+  const letter = buildLetter(kind, {
+    business: { name: business.name },
+    employee: {
+      name: employee ? `${employee.first_name} ${employee.last_name}` : "Employee",
+      jobTitle: employee?.job_title ?? "",
+      number: employee?.employee_number,
+    },
+    reference: row.reference,
+    issuedBy: user.fullName,
+    workflow,
+    generatedAt: now,
+  });
+  const pdf = await renderLetter(letter);
+
+  const fileName = `${row.reference}-${kind.replace("_", "-")}.pdf`;
+  const path = `${business.id}/cases/${caseId}/${now.getTime()}-${fileName}`;
+  const upload = await supabase.storage
+    .from("documents")
+    .upload(path, pdf, { contentType: "application/pdf", upsert: false });
+  if (upload.error) throw new Error("We couldn't save the letter. Please try again.");
+
+  const { data: doc, error } = await supabase
+    .from("documents")
+    .insert({
+      business_id: business.id,
+      case_id: caseId,
+      kind,
+      storage_path: path,
+      file_name: fileName,
+      mime_type: "application/pdf",
+      size_bytes: pdf.byteLength,
+      created_by: user.id,
+    })
+    .select("id")
+    .single();
+  if (error || !doc) throw new Error("We couldn't record the letter. Please try again.");
+
+  await supabase.from("case_events").insert({
+    case_id: caseId,
+    business_id: business.id,
+    actor_id: user.id,
+    event_type: "document.generated",
+    payload: { kind, document_id: doc.id },
+  });
+  redirect(`/app/cases/${caseId}?generated=${kind}`);
 }
