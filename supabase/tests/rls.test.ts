@@ -372,3 +372,24 @@ describe("private file storage", () => {
     expect((await ownerB.db.storage.from("evidence").download(path)).error).not.toBeNull();
   });
 });
+
+describe("admin statistics (counts only)", () => {
+  it("refuses owners and consultants", async () => {
+    for (const user of [ownerA, consultant]) {
+      const stats = await user.db.rpc("admin_platform_stats");
+      const overview = await user.db.rpc("admin_business_overview");
+      expect(stats.error).not.toBeNull();
+      expect(overview.error).not.toBeNull();
+    }
+  });
+
+  it("gives admins counts per business without any personal details", async () => {
+    const { data, error } = await platformAdmin.db.rpc("admin_business_overview");
+    expect(error).toBeNull();
+    const rowA = (data as { business_id: string; active_employees: number }[]).find(
+      (row) => row.business_id === bizA,
+    );
+    expect(rowA?.active_employees).toBeGreaterThanOrEqual(1);
+    expect(Object.keys(rowA ?? {})).not.toContain("first_name");
+  });
+});
