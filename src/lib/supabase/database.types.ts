@@ -77,7 +77,7 @@ isOneToOne: false
                   }
                   ComputedFields: never
                   Insert: {
-                    "archived_at"?: string | null,"business_id": string,"chairperson_name"?: string | null,"closed_at"?: string | null,"complainant_name"?: string | null,"created_at"?: string,"created_by"?: string | null,"current_step"?: string,"employee_id": string,"hearing_at"?: string | null,"id"?: string,"incident_id"?: string | null,"outcome"?: string,"reference": string,"review_status"?: string,"step_data"?: NonNullable<Json>,"updated_at"?: string
+                    "archived_at"?: string | null,"business_id": string,"chairperson_name"?: string | null,"closed_at"?: string | null,"complainant_name"?: string | null,"created_at"?: string,"created_by"?: string | null,"current_step"?: string,"employee_id": string,"hearing_at"?: string | null,"id"?: string,"incident_id"?: string | null,"outcome"?: string,"reference"?: string,"review_status"?: string,"step_data"?: NonNullable<Json>,"updated_at"?: string
                   }
                   Update: {
                     "archived_at"?: string | null,"business_id"?: string,"chairperson_name"?: string | null,"closed_at"?: string | null,"complainant_name"?: string | null,"created_at"?: string,"created_by"?: string | null,"current_step"?: string,"employee_id"?: string,"hearing_at"?: string | null,"id"?: string,"incident_id"?: string | null,"outcome"?: string,"reference"?: string,"review_status"?: string,"step_data"?: NonNullable<Json>,"updated_at"?: string
@@ -277,7 +277,9 @@ isOneToOne: false
             [_ in never]: never
           }
           Functions: {
-            [_ in never]: never
+            "next_case_reference":
+{ Args: Record<PropertyKey, never>; Returns: string
+                           }
           }
           Enums: {
             [_ in never]: never
