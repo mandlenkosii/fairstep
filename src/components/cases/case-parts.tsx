@@ -1,5 +1,6 @@
 import {
   CheckCircle2,
+  Download,
   ExternalLink,
   FileText,
   Image as ImageIcon,
@@ -8,6 +9,7 @@ import {
 import type { ReactNode } from "react";
 import { Stepper } from "@/components/stepper/stepper";
 import { Badge } from "@/components/ui/badge";
+import { buttonClasses } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 import type { CaseView } from "@/lib/cases/load-case";
 import { REVIEW_STATUS, ROLE_SHORT } from "@/lib/cases/labels";
@@ -149,7 +151,13 @@ export function CaseComments({ view, children }: { view: CaseView; children?: Re
 export function CaseTimeline({ view, className }: { view: CaseView; className?: string }) {
   return (
     <Card className={className}>
-      <CardTitle>Timeline</CardTitle>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <CardTitle>Timeline</CardTitle>
+        <a href={`/cases/${view.row.id}/bundle`} download className={buttonClasses("secondary")}>
+          <Download aria-hidden className="size-4" />
+          Export case bundle (PDF)
+        </a>
+      </div>
       <p className="mt-1 text-sm text-muted">
         Every action on this case, who did it and when. Entries can’t be changed.
       </p>

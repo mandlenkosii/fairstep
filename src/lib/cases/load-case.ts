@@ -28,7 +28,7 @@ export async function loadCaseView(supabase: Supabase, caseId: string) {
   const { data: row } = await supabase
     .from("cases")
     .select(
-      "*, business:businesses (id, name), employee:employees (id, first_name, last_name, job_title), incident:incidents (id, occurred_at, witnesses, category, location, description)",
+      "*, business:businesses (id, name), employee:employees (id, first_name, last_name, job_title, employee_number), incident:incidents (id, occurred_at, witnesses, category, location, description)",
     )
     .eq("id", caseId)
     .maybeSingle();
