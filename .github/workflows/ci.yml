@@ -39,3 +39,43 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  rls:
+    name: RLS tests (local Supabase)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # Starts Postgres, Auth, Storage and the API in Docker and applies every migration.
+      - name: Start local Supabase
+        run: npx supabase start -x studio,imgproxy,edge-runtime,logflare,vector,realtime
+
+      - name: Use the local Supabase keys
+        run: |
+          npx supabase status -o json 2>/dev/null > "$RUNNER_TEMP/supabase.json"
+          node -e '
+            const s = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"));
+            console.log("Status keys:", Object.keys(s).join(", "));
+            const lines = [
+              "NEXT_PUBLIC_SUPABASE_URL=" + s.API_URL,
+              "NEXT_PUBLIC_SUPABASE_ANON_KEY=" + (s.PUBLISHABLE_KEY || s.ANON_KEY),
+              "SUPABASE_SERVICE_ROLE_KEY=" + (s.SECRET_KEY || s.SERVICE_ROLE_KEY),
+            ];
+            require("fs").appendFileSync(process.env.GITHUB_ENV, lines.join("\n") + "\n");
+          ' "$RUNNER_TEMP/supabase.json"
+
+      - name: RLS tests
+        run: npm run test:rls
+
+      - name: Stop Supabase
+        if: always()
+        run: npx supabase stop --no-backup
