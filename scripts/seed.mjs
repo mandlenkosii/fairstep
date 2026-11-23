@@ -35,8 +35,16 @@ const ACCOUNTS = {
   thabo: { email: "thabo@kasikitchen.test", name: "Thabo Mokoena", role: "business_owner" },
   naledi: { email: "naledi@dlaminilabour.test", name: "Naledi Dlamini", role: "consultant" },
   admin: { email: "admin@fairstep.test", name: "Ayesha Patel", role: "admin" },
-  sibusiso: { email: "sibusiso@ubuntuguard.test", name: "Sibusiso Khumalo", role: "business_owner" },
-  nomvula: { email: "nomvula@ezulwinispaza.test", name: "Nomvula Mahlangu", role: "business_owner" },
+  sibusiso: {
+    email: "sibusiso@ubuntuguard.test",
+    name: "Sibusiso Khumalo",
+    role: "business_owner",
+  },
+  nomvula: {
+    email: "nomvula@ezulwinispaza.test",
+    name: "Nomvula Mahlangu",
+    role: "business_owner",
+  },
   kgosi: { email: "kgosi@bakwenabuild.test", name: "Kgosi Molefe", role: "business_owner" },
 };
 
@@ -175,7 +183,12 @@ const INCIDENTS = [
       },
       events: [
         ["case.opened", "thabo", "2026-11-10T07:00:00Z", {}],
-        ["step.advanced", "thabo", "2026-11-10T07:05:00Z", { from: "incident", to: "investigation" }],
+        [
+          "step.advanced",
+          "thabo",
+          "2026-11-10T07:05:00Z",
+          { from: "incident", to: "investigation" },
+        ],
         ["step.advanced", "thabo", "2026-11-20T09:00:00Z", { from: "investigation", to: "notice" }],
         ["review.requested", "thabo", "2026-11-23T08:30:00Z", {}],
       ],
@@ -202,7 +215,8 @@ const INCIDENTS = [
       step_data: {
         investigation: {
           investigator: "Thabo Mokoena",
-          findings: "Shift register shows late arrivals on 3, 17 and 24 October. No reasons given at the time.",
+          findings:
+            "Shift register shows late arrivals on 3, 17 and 24 October. No reasons given at the time.",
         },
         notice: {
           allegations: ["Late coming on 3, 17 and 24 October 2026 without notifying the manager."],
@@ -227,7 +241,12 @@ const INCIDENTS = [
       },
       events: [
         ["case.opened", "thabo", "2026-10-26T07:00:00Z", {}],
-        ["step.advanced", "thabo", "2026-10-26T07:10:00Z", { from: "incident", to: "investigation" }],
+        [
+          "step.advanced",
+          "thabo",
+          "2026-10-26T07:10:00Z",
+          { from: "incident", to: "investigation" },
+        ],
         ["step.advanced", "thabo", "2026-10-27T07:30:00Z", { from: "investigation", to: "notice" }],
         ["step.advanced", "thabo", "2026-10-30T08:00:00Z", { from: "notice", to: "hearing" }],
         ["step.advanced", "thabo", "2026-10-30T11:30:00Z", { from: "hearing", to: "outcome" }],
@@ -260,7 +279,12 @@ const INCIDENTS = [
       step_data: {},
       events: [
         ["case.opened", "thabo", "2026-11-19T06:30:00Z", {}],
-        ["step.advanced", "thabo", "2026-11-19T06:35:00Z", { from: "incident", to: "investigation" }],
+        [
+          "step.advanced",
+          "thabo",
+          "2026-11-19T06:35:00Z",
+          { from: "incident", to: "investigation" },
+        ],
       ],
       comments: [],
     },
@@ -292,7 +316,8 @@ const INCIDENTS = [
       step_data: {
         investigation: {
           investigator: "Sibusiso Khumalo",
-          findings: "Supervisor's report and photo of the open gate. Sizwe had worked a double shift the day before.",
+          findings:
+            "Supervisor's report and photo of the open gate. Sizwe had worked a double shift the day before.",
         },
         notice: {
           allegations: ["Sleeping on duty at the Umhlanga client site on 14 Nov 2026."],
@@ -302,8 +327,18 @@ const INCIDENTS = [
       },
       events: [
         ["case.opened", "sibusiso", "2026-11-16T07:00:00Z", {}],
-        ["step.advanced", "sibusiso", "2026-11-16T07:05:00Z", { from: "incident", to: "investigation" }],
-        ["step.advanced", "sibusiso", "2026-11-18T10:00:00Z", { from: "investigation", to: "notice" }],
+        [
+          "step.advanced",
+          "sibusiso",
+          "2026-11-16T07:05:00Z",
+          { from: "incident", to: "investigation" },
+        ],
+        [
+          "step.advanced",
+          "sibusiso",
+          "2026-11-18T10:00:00Z",
+          { from: "investigation", to: "notice" },
+        ],
         ["review.requested", "sibusiso", "2026-11-18T10:30:00Z", {}],
         ["review.changes_requested", "naledi", "2026-11-19T08:00:00Z", {}],
       ],
@@ -342,7 +377,12 @@ const INCIDENTS = [
       step_data: {},
       events: [
         ["case.opened", "kgosi", "2026-11-12T06:00:00Z", {}],
-        ["step.advanced", "kgosi", "2026-11-12T06:05:00Z", { from: "incident", to: "investigation" }],
+        [
+          "step.advanced",
+          "kgosi",
+          "2026-11-12T06:05:00Z",
+          { from: "incident", to: "investigation" },
+        ],
       ],
       comments: [],
     },
@@ -418,17 +458,15 @@ async function main() {
 
   // Archived employee, to show the archive state.
   must(
-    await db
-      .from("employees")
-      .insert({
-        business_id: businessIds.kasi,
-        first_name: "Kabelo",
-        last_name: "Moloi",
-        employee_number: "KK-000",
-        job_title: "Barista",
-        start_date: "2020-01-06",
-        status: "archived",
-      }),
+    await db.from("employees").insert({
+      business_id: businessIds.kasi,
+      first_name: "Kabelo",
+      last_name: "Moloi",
+      employee_number: "KK-000",
+      job_title: "Barista",
+      start_date: "2020-01-06",
+      status: "archived",
+    }),
     "archived employee",
   );
 
