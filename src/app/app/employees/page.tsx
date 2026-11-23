@@ -71,7 +71,7 @@ export default async function EmployeesPage({ searchParams }: PageProps<"/app/em
               href={tabHref(s)}
               aria-current={status === s ? "page" : undefined}
               className={cn(
-                "rounded-md px-3 py-2 text-sm font-semibold capitalize",
+                "inline-flex min-h-11 items-center rounded-md px-3 text-sm font-semibold capitalize",
                 status === s ? "bg-primary-tint text-primary" : "text-muted hover:text-ink",
               )}
             >
@@ -130,7 +130,7 @@ export default async function EmployeesPage({ searchParams }: PageProps<"/app/em
             <caption className="sr-only">
               {status === "archived" ? "Archived" : "Active"} employees
             </caption>
-            <thead className="hidden border-b border-line bg-paper md:table-header-group">
+            <thead className="hidden border-b border-line bg-paper lg:table-header-group">
               <tr className="label-caps text-muted">
                 <th scope="col" className="px-6 py-3 font-semibold">
                   Employee
@@ -154,7 +154,7 @@ export default async function EmployeesPage({ searchParams }: PageProps<"/app/em
                 const name = `${e.first_name} ${e.last_name}`;
                 return (
                   <tr key={e.id} className="relative hover:bg-paper">
-                    <td className="px-4 py-4 md:px-6">
+                    <td className="px-4 py-4 lg:px-6">
                       <div className="flex items-center gap-3">
                         <span
                           aria-hidden
@@ -173,18 +173,18 @@ export default async function EmployeesPage({ searchParams }: PageProps<"/app/em
                         </div>
                       </div>
                     </td>
-                    <td className="hidden px-6 py-4 text-muted md:table-cell">
+                    <td className="hidden px-6 py-4 text-muted lg:table-cell">
                       {e.employee_number ?? "–"}
                     </td>
-                    <td className="hidden px-6 py-4 text-muted md:table-cell">
+                    <td className="hidden px-6 py-4 text-muted lg:table-cell">
                       {formatDate(e.start_date)}
                     </td>
-                    <td className="hidden px-6 py-4 md:table-cell">
+                    <td className="hidden px-6 py-4 lg:table-cell">
                       <Badge tone={e.status === "active" ? "success" : "neutral"}>
                         {e.status === "active" ? "Active" : "Archived"}
                       </Badge>
                     </td>
-                    <td className="px-4 py-4 text-right md:px-6">
+                    <td className="px-4 py-4 text-right lg:px-6">
                       <ChevronRight aria-hidden className="ml-auto size-5 text-muted" />
                     </td>
                   </tr>

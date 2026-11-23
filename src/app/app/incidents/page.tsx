@@ -55,7 +55,7 @@ export default async function IncidentsPage() {
         <Card className="mt-6 overflow-hidden p-0 sm:p-0">
           <table className="w-full text-left text-sm">
             <caption className="sr-only">Incidents</caption>
-            <thead className="hidden border-b border-line bg-paper md:table-header-group">
+            <thead className="hidden border-b border-line bg-paper lg:table-header-group">
               <tr className="label-caps text-muted">
                 <th scope="col" className="px-6 py-3 font-semibold">
                   When
@@ -81,22 +81,22 @@ export default async function IncidentsPage() {
                 const evidence = incident.documents?.length ?? 0;
                 return (
                   <tr key={incident.id} className="relative hover:bg-paper">
-                    <td className="px-4 py-4 md:px-6">
+                    <td className="px-4 py-4 lg:px-6">
                       <Link
                         href={`/app/incidents/${incident.id}`}
                         className="font-semibold text-ink after:absolute after:inset-0 focus-visible:outline-none"
                       >
                         {formatDateTime(incident.occurred_at)}
                       </Link>
-                      <p className="text-muted md:hidden">
+                      <p className="text-muted lg:hidden">
                         {employee ? `${employee.first_name} ${employee.last_name}` : ""} ·{" "}
                         {CATEGORY_LABEL[incident.category as IncidentCategory]}
                       </p>
                     </td>
-                    <td className="hidden px-6 py-4 md:table-cell">
+                    <td className="hidden px-6 py-4 lg:table-cell">
                       {employee ? `${employee.first_name} ${employee.last_name}` : "–"}
                     </td>
-                    <td className="hidden px-6 py-4 md:table-cell">
+                    <td className="hidden px-6 py-4 lg:table-cell">
                       <span>{CATEGORY_LABEL[incident.category as IncidentCategory]}</span>
                       {evidence > 0 && (
                         <span className="ml-2 inline-flex items-center gap-1 text-muted">
@@ -106,14 +106,14 @@ export default async function IncidentsPage() {
                         </span>
                       )}
                     </td>
-                    <td className="hidden px-6 py-4 md:table-cell">
+                    <td className="hidden px-6 py-4 lg:table-cell">
                       {kase ? (
                         <Badge tone="primary">{kase.reference}</Badge>
                       ) : (
                         <span className="text-muted">No case</span>
                       )}
                     </td>
-                    <td className="px-4 py-4 text-right md:px-6">
+                    <td className="px-4 py-4 text-right lg:px-6">
                       <ChevronRight aria-hidden className="ml-auto size-5 text-muted" />
                     </td>
                   </tr>
