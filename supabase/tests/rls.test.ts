@@ -45,6 +45,11 @@ function must<R extends { data: unknown; error: { message: string } | null }>(
   return result.data as NonNullable<R["data"]>;
 }
 
+/** For calls that return no rows (insert/update without select): only checks for an error. */
+function ok(result: { error: { message: string } | null }, what: string): void {
+  if (result.error) throw new Error(`${what}: ${result.error.message}`);
+}
+
 async function actor(
   name: string,
   role: "business_owner" | "consultant" | "admin",
@@ -61,7 +66,7 @@ async function actor(
   );
   created.users.push(user!.id);
   if (role !== "business_owner") {
-    must(await admin.from("profiles").update({ role }).eq("id", user!.id), `role for ${name}`);
+    ok(await admin.from("profiles").update({ role }).eq("id", user!.id), `role for ${name}`);
   }
   const db = createClient(url, anonKey, { auth: { persistSession: false } });
   must(await db.auth.signInWithPassword({ email, password }), `log in ${name}`);
@@ -74,7 +79,7 @@ async function business(name: string, owner: Actor): Promise<string> {
     `business ${name}`,
   );
   created.businesses.push(id);
-  must(
+  ok(
     await admin.from("business_members").insert({ business_id: id, user_id: owner.id }),
     `membership ${name}`,
   );
@@ -93,7 +98,7 @@ beforeAll(async () => {
   ]);
   bizA = await business(`RLS Business A ${run}`, ownerA);
   bizB = await business(`RLS Business B ${run}`, ownerB);
-  must(
+  ok(
     await admin
       .from("consultant_assignments")
       .insert({ consultant_id: consultant.id, business_id: bizA }),
