@@ -277,7 +277,15 @@ isOneToOne: false
             [_ in never]: never
           }
           Functions: {
-            "next_case_reference":
+            "admin_business_overview":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "active_employees": number,"business_id": string,"consultant_ids": (string)[],"created_at": string,"name": string,"open_cases": number,"pending_review": number,"plan": string,"province": string,"sector": string
+            }[]
+                           },
+"admin_platform_stats":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"next_case_reference":
 { Args: Record<PropertyKey, never>; Returns: string
                            }
           }
