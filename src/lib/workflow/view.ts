@@ -136,6 +136,8 @@ export function eventLabel(type: string, payload: unknown): string {
       const step = String(data.step ?? "");
       return `Recorded the ${(STEP_LABEL[step as Step] ?? "step").toLowerCase()} details`;
     }
+    case "bundle.exported":
+      return "Exported the case bundle";
     case "comment.added":
       return "Added a comment";
     case "review.requested":
