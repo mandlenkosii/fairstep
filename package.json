@@ -13,7 +13,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "db:seed": "node --env-file=.env.local scripts/seed.mjs",
-    "test:rls": "node scripts/run.mjs vitest run --config vitest.rls.config.mts"
+    "test:rls": "node scripts/run.mjs vitest run --config vitest.rls.config.mts",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.9.0",
@@ -27,6 +28,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/turbopack": "4.3.3",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^8.0.0",
