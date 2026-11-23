@@ -9,7 +9,8 @@ Key docs: [BUSINESS.md](BUSINESS.md), [docs/PRD.md](docs/PRD.md) (roles, rules R
 **Phase 0 (done):** business docs, PRD, Stitch prompts, public repo https://github.com/mandlenkosii/fairstep
 **Phase 1 (done):** Stitch exports in docs/designs/ (named `NN-screen-device.png`, tokens in `design-system.md`), Stitch link and design gallery in README. Design copy that conflicts with the PRD (e.g. "Schedule 8", "48 hours", crypto claims, ACAS) is not used.
 **Phase 2 (done):** IMPLEMENTATION_PLAN.md, issues #1–#34 with labels and 6 milestones, scaffold, CI, design tokens, UI components, stepper, app shell, landing page, log-in/sign-up screens (PRs #35–#43).
-**Phase 3 (next):** issues #11–#19 (Supabase, schema, RLS, storage, auth, route protection, seed, RLS tests, workflow rules).
+**Phase 3 (done):** workflow rules R1–R11, Supabase clients, schema, RLS, private storage, auth, proxy route protection, seed with 3 test logins, RLS tests in CI (PRs #47–#55). Hosted Supabase project is migrated and seeded.
+**Phase 4 (next):** issues #20–#23 (Vercel deploy, employee register, incident log with evidence, start a case + stepper).
 
 | Phase | Due (SAST) | Scope |
 |---|---|---|
@@ -21,13 +22,19 @@ Key docs: [BUSINESS.md](BUSINESS.md), [docs/PRD.md](docs/PRD.md) (roles, rules R
 | 6 | Wed 25 Nov 14:00 | README complete, QA, Loom script, submission post |
 
 ## Stack
-Next.js (App Router) + TypeScript strict + Tailwind · Supabase (Postgres, Auth, Storage, RLS; migrations in `supabase/migrations`, `supabase/seed.sql`) · Server Actions with zod · @react-pdf/renderer · Vitest + RTL · Playwright · ESLint + Prettier · GitHub Actions · Vercel.
+Next.js (App Router) + TypeScript strict + Tailwind · Supabase (Postgres, Auth, Storage, RLS; migrations in `supabase/migrations`, seed in `scripts/seed.mjs`) · Server Actions with zod · @react-pdf/renderer · Vitest + RTL · Playwright · ESLint + Prettier · GitHub Actions · Vercel.
 
 ## Code notes
 - **Next.js 16**: read `node_modules/next/dist/docs/` before using an API. Middleware is now `src/proxy.ts`. `cacheComponents` is off on purpose (pages read the session).
 - Tokens in `src/app/globals.css` (`bg-primary`, `text-muted`, `border-line`, `bg-paper`, `text-warning-strong`…). Ochre `accent` is for rings/dots only, never text.
 - Components: `src/components/ui` (Button, ButtonLink, Badge, Card, Field + Input/Textarea/Select), `stepper/Stepper` (`vertical`, `compact`), `shell/AppShell` (role nav), `shell/Disclaimer`.
 - Validation: zod schemas in `src/lib/validation/`, reused by forms and server actions.
+- Workflow: `canTransition(case, toStep, now)` in `src/lib/workflow/rules.ts` returns `{ ok }` or plain-language `reasons`; server actions must call it before every step change. Build its `WorkflowCase` input from the case row.
+- Supabase clients in `src/lib/supabase/`: `server.ts` (acts as the user, RLS applies), `client.ts` (browser), `admin.ts` (secret key, bypasses RLS, `server-only`; only after a server-side role check). Types: `database.types.ts`.
+- Auth: `src/proxy.ts` refreshes the session and sends signed-out/wrong-role users away; `requireRole(role)` from `src/lib/auth/session.ts` must still be called in every page and server action (layouts don't re-run on navigation). Sign-up trigger always creates `business_owner`.
+- Database rules to respect: composite FKs keep everything in one business; no deletes of case data (archive); `case_events` is append-only even for the service role; consultants can change only `review_status` (trigger); storage paths start with `<business_id>/`.
+- DB commands (load `.env.local` first, e.g. `set -a && . ./.env.local && set +a` in Git Bash): apply migrations `npx supabase db push --remote="$SUPABASE_DB_URL"`; regenerate types `npx supabase gen types typescript --db-url "$SUPABASE_DB_URL" --schema public > src/lib/supabase/database.types.ts`; seed once `npm run db:seed`; RLS tests `npm run test:rls` (CI uses local Supabase; against hosted only with `RLS_TESTS_ALLOW_REMOTE=1`).
+- Test logins (password `FairStep-demo-2026`): `thabo@kasikitchen.test` (owner), `naledi@dlaminilabour.test` (consultant), `admin@fairstep.test` (admin).
 - `npm run dev/build/start/test` go through `scripts/run.mjs`, which fixes Next.js (500 errors) and Vitest failing on a lowercase `c:\` Windows path. Markdown is excluded from Prettier.
 - Checks before a PR: `npm run lint`, `npm run format:check`, `npm run typecheck`, `npm test`, `npm run build`.
 
