@@ -10,8 +10,10 @@ import { publicEnv } from "./env";
  * filtered by Row Level Security. Create a new one per request.
  */
 export async function createClient() {
-  const { url, anonKey } = publicEnv();
+  // Read cookies first: it marks the page as per-request, so the build never
+  // tries to pre-render it (and never needs Supabase settings at build time).
   const cookieStore = await cookies();
+  const { url, anonKey } = publicEnv();
 
   return createServerClient<Database>(url, anonKey, {
     cookies: {
