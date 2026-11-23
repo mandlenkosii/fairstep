@@ -4,19 +4,21 @@ import {
   CheckCircle2,
   ExternalLink,
   FileText,
+  Gavel,
   Image as ImageIcon,
 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EvidenceUploader } from "@/components/incidents/evidence-uploader";
-import { Badge } from "@/components/ui/badge";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 import { requireOwnerBusiness } from "@/lib/auth/session";
 import { formatDateTime } from "@/lib/format";
 import { one } from "@/lib/supabase/one";
 import { createClient } from "@/lib/supabase/server";
 import { CATEGORY_LABEL, type IncidentCategory } from "@/lib/validation/incident";
+import { startCaseFromIncident } from "../../cases/actions";
 
 export const metadata: Metadata = { title: "Incident" };
 
@@ -112,7 +114,19 @@ export default async function IncidentPage({
             </p>
           )}
         </div>
-        {kase ? <Badge tone="primary">Case {kase.reference}</Badge> : <Badge>No case</Badge>}
+        {kase ? (
+          <ButtonLink href={`/app/cases/${kase.id}`} variant="secondary">
+            <Gavel aria-hidden className="size-4" />
+            Open case {kase.reference}
+          </ButtonLink>
+        ) : (
+          <form action={startCaseFromIncident.bind(null, incident.id)}>
+            <Button type="submit">
+              <Gavel aria-hidden className="size-4" />
+              Start a disciplinary case
+            </Button>
+          </form>
+        )}
       </div>
 
       <div className="mt-6 grid gap-6 md:grid-cols-3">
