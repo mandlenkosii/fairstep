@@ -71,13 +71,13 @@ All rules are **pure functions** in `src/lib/workflow/` with exhaustive unit tes
 |---|---|---|---|
 | R1 Step order | `STEP_ORDER` | Jumping ahead (e.g. hearing before notice) | "You need to issue a notice of hearing before the hearing can take place." |
 | R2 Investigation findings | — | Issuing a notice without investigation findings recorded | "Record what you found in your investigation first, so the allegations are clear." |
-| R3 Minimum notice | `MIN_NOTICE_WORKING_DAYS = 2` | Scheduling a hearing less than 2 working days after notice is delivered | "The employee must get at least 2 working days to prepare. The earliest fair date is Wed 26 Nov." |
+| R3 Minimum notice | `MIN_NOTICE_WORKING_DAYS = 2` | Scheduling a hearing less than 2 working days after notice is delivered | "The employee must get at least 2 working days to prepare. The earliest fair date is Thu 26 Nov." |
 | R4 Notice content | — | Notice without allegations, date/time/venue, and employee rights (representation, interpreter, witnesses) | "The notice must list the allegations and the employee's rights." |
 | R5 Impartial chairperson | — | Chairperson who is the complainant, the investigator or a witness | "The chairperson can't also be the complainant. Choose someone who wasn't involved." |
 | R6 Right to respond | — | Recording an outcome without the employee's response, or without a documented reason why there was none (e.g. failed to attend after a postponement) | "Record the employee's side of the story before deciding the outcome." |
 | R7 Postponement on non-attendance | `MAX_POSTPONEMENTS_BEFORE_IN_ABSENTIA = 1` | Proceeding in absentia at the first no-show | "Postpone once and re-notify before continuing without the employee." |
 | R8 Sanction justification | — | Dismissal without recorded reasons (seriousness, prior warnings, circumstances) | "Explain why dismissal is appropriate, including any prior valid warnings." |
-| R9 Appeal window | `APPEAL_WINDOW_WORKING_DAYS = 5` | Lodging an appeal after the window closes | "The appeal period ended on Fri 28 Nov." |
+| R9 Appeal window | `APPEAL_WINDOW_WORKING_DAYS = 5` | Lodging an appeal after the window closes | "The appeal period ended on Fri 27 Nov." |
 | R10 Warning validity | `WRITTEN_WARNING_VALID_MONTHS = 6`, `FINAL_WARNING_VALID_MONTHS = 12` | Counting expired warnings as prior offences | "This warning expired on 3 May 2026 and can't be counted." |
 | R11 Locked after close | — | Editing a closed case (comments still allowed) | "This case is closed. Add a note instead of changing the record." |
 
