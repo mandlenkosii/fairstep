@@ -11,7 +11,8 @@
     "test": "node scripts/run.mjs vitest run",
     "test:watch": "node scripts/run.mjs vitest",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "db:seed": "node --env-file=.env.local scripts/seed.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
