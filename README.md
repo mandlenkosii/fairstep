@@ -10,7 +10,7 @@ FairStep helps small business owners run fair, fully documented disciplinary pro
 
 |                         |                                                                                               |
 | ----------------------- | --------------------------------------------------------------------------------------------- |
-| Live app                | _coming in Phase 4 (Vercel)_                                                                  |
+| Live app                | [fairstep.vercel.app](https://fairstep.vercel.app) |
 | Designs (Google Stitch) | [Stitch project](https://stitch.google.com/projects/4898099028546742169) · exports in [`docs/designs/`](docs/designs/) |
 | Business case           | [BUSINESS.md](BUSINESS.md)                                                                    |
 | Product requirements    | [docs/PRD.md](docs/PRD.md)                                                                    |
@@ -56,6 +56,18 @@ The design system (colours, type, spacing) is in [docs/designs/design-system.md]
 </p>
 
 **Building from the designs.** The designs set the layout, components and visual style. Where the generated copy conflicts with the [PRD](docs/PRD.md), the PRD wins. For example, the app refers to the 2025 _Code of Good Practice: Dismissal_ (not "Schedule 8"), uses "2 working days' notice" (not "48 hours"), and makes no cryptographic or "tamper-proof" claims. Screens without a design (employee detail, consultant case review, mobile stepper) reuse the same components.
+
+## Try it
+
+Live: **https://fairstep.vercel.app**. All three test logins use the password `FairStep-demo-2026`.
+
+| Role | Email | Sees |
+|---|---|---|
+| Business owner (Thabo Mokoena, Kasi Kitchen) | `thabo@kasikitchen.test` | Only Kasi Kitchen |
+| Labour consultant (Naledi Dlamini) | `naledi@dlaminilabour.test` | Her two assigned clients |
+| Platform admin (Ayesha Patel) | `admin@fairstep.test` | All businesses, no employee or case details |
+
+All people and businesses in the demo data are fictional.
 
 ## Who it's for
 
