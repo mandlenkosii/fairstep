@@ -10,7 +10,8 @@ Key docs: [BUSINESS.md](BUSINESS.md), [docs/PRD.md](docs/PRD.md) (roles, rules R
 **Phase 1 (done):** Stitch exports in docs/designs/ (named `NN-screen-device.png`, tokens in `design-system.md`), Stitch link and design gallery in README. Design copy that conflicts with the PRD (e.g. "Schedule 8", "48 hours", crypto claims, ACAS) is not used.
 **Phase 2 (done):** IMPLEMENTATION_PLAN.md, issues #1–#34 with labels and 6 milestones, scaffold, CI, design tokens, UI components, stepper, app shell, landing page, log-in/sign-up screens (PRs #35–#43).
 **Phase 3 (done):** workflow rules R1–R11, Supabase clients, schema, RLS, private storage, auth, proxy route protection, seed with 3 test logins, RLS tests in CI (PRs #47–#55). Hosted Supabase project is migrated and seeded.
-**Phase 4 (next):** issues #20–#23 (Vercel deploy, employee register, incident log with evidence, start a case + stepper).
+**Phase 4 (done):** live at https://fairstep.vercel.app (Vercel, auto-deploys main + PR previews); employee register, incident log with private evidence (browser uploads straight to storage, then `recordEvidence`), start a case + case page with stepper, blocked reasons and timeline (PRs #57–#60).
+**Phase 5 (next):** issues #24–#31 (step forms, PDFs, consultant review, timeline + bundle, admin, owner dashboard, states/polish incl. responsive, Playwright e2e).
 
 | Phase | Due (SAST) | Scope |
 |---|---|---|
@@ -34,6 +35,8 @@ Next.js (App Router) + TypeScript strict + Tailwind · Supabase (Postgres, Auth,
 - Auth: `src/proxy.ts` refreshes the session and sends signed-out/wrong-role users away; `requireRole(role)` from `src/lib/auth/session.ts` must still be called in every page and server action (layouts don't re-run on navigation). Sign-up trigger always creates `business_owner`.
 - Database rules to respect: composite FKs keep everything in one business; no deletes of case data (archive); `case_events` is append-only even for the service role; consultants can change only `review_status` (trigger); storage paths start with `<business_id>/`.
 - DB commands (load `.env.local` first, e.g. `set -a && . ./.env.local && set +a` in Git Bash): apply migrations `npx supabase db push --remote="$SUPABASE_DB_URL"`; regenerate types `npx supabase gen types typescript --db-url "$SUPABASE_DB_URL" --schema public > src/lib/supabase/database.types.ts`; seed once `npm run db:seed`; RLS tests `npm run test:rls` (CI uses local Supabase; against hosted only with `RLS_TESTS_ALLOW_REMOTE=1`).
+- Pages: owner area `src/app/app/` (employees, incidents, cases). Case view model in `src/lib/workflow/view.ts` (`caseToWorkflow`, `buildStepperSteps`, `eventLabel`); `openCase` in `src/lib/cases/open-case.ts`; `advanceCase` re-runs `canTransition` server-side. Joins come back via `one()` (`src/lib/supabase/one.ts`).
+- Live data is the demo: case_events are permanent, so don't test-advance seeded cases on the hosted DB; use realistic data or local Supabase.
 - Test logins (password `FairStep-demo-2026`): `thabo@kasikitchen.test` (owner), `naledi@dlaminilabour.test` (consultant), `admin@fairstep.test` (admin).
 - `npm run dev/build/start/test` go through `scripts/run.mjs`, which fixes Next.js (500 errors) and Vitest failing on a lowercase `c:\` Windows path. Markdown is excluded from Prettier.
 - Checks before a PR: `npm run lint`, `npm run format:check`, `npm run typecheck`, `npm test`, `npm run build`.
