@@ -109,7 +109,7 @@ export function CaseIncident({ view, href }: { view: CaseView; href?: string }) 
       {href && (
         <a
           href={href}
-          className="mt-3 inline-block text-sm font-semibold text-primary underline-offset-2 hover:underline"
+          className="mt-1 inline-flex min-h-11 items-center text-sm font-semibold text-primary underline-offset-2 hover:underline"
         >
           View incident
         </a>

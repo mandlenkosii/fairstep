@@ -72,7 +72,7 @@ export async function ReviewQueue({ tab, basePath }: { tab: QueueTab; basePath: 
             href={`${basePath}?tab=${key}`}
             aria-current={tab === key ? "page" : undefined}
             className={cn(
-              "rounded-md px-3 py-2 text-sm font-semibold",
+              "inline-flex min-h-11 items-center rounded-md px-3 text-sm font-semibold",
               tab === key ? "bg-primary-tint text-primary" : "text-muted hover:text-ink",
             )}
           >

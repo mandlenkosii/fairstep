@@ -60,7 +60,7 @@ export default async function CasePage({ params, searchParams }: PageProps<"/app
     <div className="mx-auto max-w-6xl px-4 py-8 md:px-8">
       <Link
         href="/app/cases"
-        className="inline-flex items-center gap-1 text-sm font-semibold text-muted hover:text-ink"
+        className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-muted hover:text-ink"
       >
         <ArrowLeft aria-hidden className="size-4" />
         Cases

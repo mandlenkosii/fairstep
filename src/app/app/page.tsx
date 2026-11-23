@@ -219,7 +219,7 @@ export default async function OwnerDashboardPage() {
                   <CardTitle>Active cases</CardTitle>
                   <Link
                     href="/app/cases"
-                    className="text-sm font-semibold text-primary underline-offset-2 hover:underline"
+                    className="inline-flex min-h-11 items-center text-sm font-semibold text-primary underline-offset-2 hover:underline"
                   >
                     All cases
                   </Link>

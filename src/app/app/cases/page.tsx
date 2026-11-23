@@ -66,7 +66,7 @@ export default async function CasesPage({ searchParams }: PageProps<"/app/cases"
               href={href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "rounded-md px-3 py-2 text-sm font-semibold capitalize",
+                "inline-flex min-h-11 items-center rounded-md px-3 text-sm font-semibold capitalize",
                 active ? "bg-primary-tint text-primary" : "text-muted hover:text-ink",
               )}
             >
