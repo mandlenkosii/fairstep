@@ -130,7 +130,8 @@ function StepCircle({
         "relative z-10 flex shrink-0 items-center justify-center rounded-full font-semibold",
         size,
         status === "completed" && "bg-primary text-white",
-        status === "current" && "animate-pulse-ring bg-surface text-ink ring-[3px] ring-accent",
+        status === "current" &&
+          "bg-surface text-ink ring-[3px] ring-accent after:absolute after:inset-0 after:-z-10 after:animate-pulse-ring after:rounded-full",
         status === "blocked" && "bg-line text-muted",
         status === "upcoming" && "border-2 border-line bg-surface text-muted",
       )}
