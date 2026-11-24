@@ -1,5 +1,6 @@
 import { Link2 } from "lucide-react";
 import type { Metadata } from "next";
+import { EmptyIllustration } from "@/components/states/empty-state";
 import { unassignConsultant } from "@/app/admin/actions";
 import { AdminNotice } from "@/components/admin/admin-notice";
 import { Button } from "@/components/ui/button";
@@ -33,8 +34,8 @@ export default async function AdminAssignmentsPage({
       <AdminNotice done={done} error={error} />
       {!assignments?.length ? (
         <Card className="mt-6 flex flex-col items-center py-12 text-center">
-          <Link2 aria-hidden className="size-10 text-muted" />
-          <p className="mt-3 font-semibold">No assignments yet</p>
+          <EmptyIllustration icon={Link2} />
+          <p className="mt-5 font-serif text-headline-sm font-semibold">No assignments yet</p>
         </Card>
       ) : (
         <ul className="mt-6 flex flex-col gap-3">

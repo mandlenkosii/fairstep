@@ -1,5 +1,6 @@
 import { ChevronRight, Flag, Gavel } from "lucide-react";
 import type { Metadata } from "next";
+import { EmptyIllustration } from "@/components/states/empty-state";
 import Link from "next/link";
 import { Stepper } from "@/components/stepper/stepper";
 import { Badge } from "@/components/ui/badge";
@@ -78,8 +79,10 @@ export default async function CasesPage({ searchParams }: PageProps<"/app/cases"
 
       {cases.length === 0 ? (
         <Card className="mt-6 flex flex-col items-center py-12 text-center">
-          <Gavel aria-hidden className="size-10 text-muted" />
-          <p className="mt-3 font-semibold">{showClosed ? "No closed cases" : "No open cases"}</p>
+          <EmptyIllustration icon={Gavel} />
+          <p className="mt-5 font-serif text-headline-sm font-semibold">
+            {showClosed ? "No closed cases" : "No open cases"}
+          </p>
           {!showClosed && (
             <p className="mt-1 max-w-sm text-muted">
               A case starts from an incident. Open an incident and choose “Start a disciplinary
@@ -97,7 +100,7 @@ export default async function CasesPage({ searchParams }: PageProps<"/app/cases"
             const review = REVIEW_STATUS[kase.review_status] ?? REVIEW_STATUS.not_requested;
             return (
               <li key={kase.id}>
-                <Card className="relative hover:border-primary/40">
+                <Card className="relative lift hover:border-primary/40">
                   <div className="flex flex-wrap items-start gap-4">
                     <span
                       aria-hidden

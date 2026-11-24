@@ -130,7 +130,7 @@ function StepCircle({
         "relative z-10 flex shrink-0 items-center justify-center rounded-full font-semibold",
         size,
         status === "completed" && "bg-primary text-white",
-        status === "current" && "bg-surface text-ink ring-[3px] ring-accent",
+        status === "current" && "animate-pulse-ring bg-surface text-ink ring-[3px] ring-accent",
         status === "blocked" && "bg-line text-muted",
         status === "upcoming" && "border-2 border-line bg-surface text-muted",
       )}
@@ -148,7 +148,7 @@ function Connector({ done, layout }: { done: boolean; layout: Layout }) {
     <span
       aria-hidden
       className={cn(
-        "absolute",
+        "absolute transition-colors duration-500",
         done ? "bg-primary" : "bg-line",
         layout === "compact" && "top-3 right-[calc(-50%+14px)] left-[calc(50%+14px)] h-0.5",
         layout !== "compact" && "top-9 bottom-1 left-[15px] w-0.5",

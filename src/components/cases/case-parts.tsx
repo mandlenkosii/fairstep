@@ -1,12 +1,6 @@
-import {
-  CheckCircle2,
-  Download,
-  ExternalLink,
-  FileText,
-  Image as ImageIcon,
-  MessageSquare,
-} from "lucide-react";
+import { Download, ExternalLink, FileText, Image as ImageIcon, MessageSquare } from "lucide-react";
 import type { ReactNode } from "react";
+import { Toast } from "@/components/motion/toast";
 import { Stepper } from "@/components/stepper/stepper";
 import { Badge } from "@/components/ui/badge";
 import { buttonClasses } from "@/components/ui/button";
@@ -19,16 +13,9 @@ import { buildStepperSteps, eventLabel, STEP_LABEL } from "@/lib/workflow/view";
 
 /** Pieces shared by the owner's and the consultant's case pages. */
 
+/** A confirmation after an action, shown as a toast that slides in and fades away. */
 export function Notice({ children }: { children: ReactNode }) {
-  return (
-    <p
-      role="status"
-      className="mt-4 flex items-center gap-2 rounded-lg bg-success-tint px-3 py-2 text-sm text-success-strong"
-    >
-      <CheckCircle2 aria-hidden className="size-4 shrink-0" />
-      {children}
-    </p>
-  );
+  return <Toast>{children}</Toast>;
 }
 
 export function CaseHeader({ view, subtitle }: { view: CaseView; subtitle?: string }) {
@@ -162,12 +149,16 @@ export function CaseTimeline({ view, className }: { view: CaseView; className?: 
         Every action on this case, who did it and when. Entries can’t be changed.
       </p>
       {view.events.length ? (
-        <ol className="mt-4 border-l-2 border-line pl-5">
-          {view.events.map((event) => (
-            <li key={event.id} className="relative pb-5 last:pb-0">
+        <ol className="relative mt-4 pl-5 before:absolute before:top-1 before:bottom-1 before:left-0 before:w-0.5 before:rounded-full before:bg-gradient-to-b before:from-primary before:via-primary/60 before:to-accent/70">
+          {view.events.map((event, index) => (
+            <li
+              key={event.id}
+              className="relative animate-rise pb-5 last:pb-0"
+              style={{ animationDelay: `${Math.min(index, 8) * 60}ms` }}
+            >
               <span
                 aria-hidden
-                className="absolute top-1.5 -left-[27px] size-3 rounded-full bg-primary ring-4 ring-surface"
+                className="absolute top-1.5 -left-[25px] size-3 rounded-full bg-primary ring-4 ring-surface"
               />
               <p className="font-semibold">
                 {event.actor?.full_name ?? "Someone"}{" "}

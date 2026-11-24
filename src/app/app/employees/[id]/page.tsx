@@ -1,7 +1,8 @@
-import { Archive, ArrowLeft, CheckCircle2, Pencil, RotateCcw } from "lucide-react";
+import { Archive, ArrowLeft, Pencil, RotateCcw } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Toast } from "@/components/motion/toast";
 import { EmployeeForm } from "@/components/employees/employee-form";
 import { Badge } from "@/components/ui/badge";
 import { Button, ButtonLink } from "@/components/ui/button";
@@ -67,15 +68,7 @@ export default async function EmployeePage({
         Employees
       </Link>
 
-      {savedMessage && (
-        <p
-          role="status"
-          className="mt-4 flex items-center gap-2 rounded-lg bg-success-tint px-3 py-2 text-sm text-success-strong"
-        >
-          <CheckCircle2 aria-hidden className="size-4" />
-          {savedMessage}
-        </p>
-      )}
+      {savedMessage && <Toast>{savedMessage}</Toast>}
 
       <div className="mt-4 flex flex-wrap items-center gap-4">
         <span

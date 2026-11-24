@@ -1,5 +1,6 @@
 import { Briefcase } from "lucide-react";
 import type { Metadata } from "next";
+import { EmptyIllustration } from "@/components/states/empty-state";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { requireRole } from "@/lib/auth/session";
@@ -23,8 +24,8 @@ export default async function ConsultantClientsPage() {
       <p className="mt-1 text-muted">Businesses assigned to you by FairStep.</p>
       {!businesses?.length ? (
         <Card className="mt-6 flex flex-col items-center py-12 text-center">
-          <Briefcase aria-hidden className="size-10 text-muted" />
-          <p className="mt-3 font-semibold">No clients assigned yet</p>
+          <EmptyIllustration icon={Briefcase} />
+          <p className="mt-5 font-serif text-headline-sm font-semibold">No clients assigned yet</p>
           <p className="mt-1 text-muted">
             A FairStep admin links you to the businesses you advise.
           </p>

@@ -7,6 +7,10 @@ import {
   ReviewPreview,
 } from "@/components/marketing/product-previews";
 import { SiteHeader } from "@/components/marketing/site-header";
+import { Aurora } from "@/components/motion/aurora";
+import { CountUp } from "@/components/motion/count-up";
+import { Reveal } from "@/components/motion/reveal";
+import { WordReveal } from "@/components/motion/word-reveal";
 import { Disclaimer } from "@/components/shell/disclaimer";
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
@@ -101,28 +105,36 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Hero */}
-        <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-12 md:grid-cols-[1.1fr_1fr] md:px-8 md:py-20">
-          <div>
-            <Badge tone="primary">Built for South African small businesses</Badge>
-            <h1 className="mt-4 text-[2.5rem] leading-tight md:text-6xl">
-              Every step fair. <span className="block text-primary">Every step on record.</span>
-            </h1>
-            <p className="mt-5 max-w-xl text-lg text-muted">
-              FairStep helps small business owners run fair, fully documented disciplinary
-              processes, so they stop losing CCMA cases on procedure.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href="/signup" size="lg">
-                Start your 14-day free trial
-              </ButtonLink>
-              <ButtonLink href="#how-it-works" size="lg" variant="secondary">
-                See how it works
-              </ButtonLink>
+        <div className="relative isolate overflow-hidden">
+          <Aurora />
+          <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-12 md:grid-cols-[1.1fr_1fr] md:px-8 md:py-20">
+            <div>
+              <Badge tone="primary">Built for South African small businesses</Badge>
+              <h1 className="mt-4 text-[2.5rem] leading-tight md:text-6xl">
+                <WordReveal text="Every step fair." />{" "}
+                <span className="block text-primary">
+                  <WordReveal text="Every step on record." delay={0.3} />
+                </span>
+              </h1>
+              <p className="mt-5 max-w-xl text-lg text-muted">
+                FairStep helps small business owners run fair, fully documented disciplinary
+                processes, so they stop losing CCMA cases on procedure.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <ButtonLink href="/signup" size="lg">
+                  Start your 14-day free trial
+                </ButtonLink>
+                <ButtonLink href="#how-it-works" size="lg" variant="secondary">
+                  See how it works
+                </ButtonLink>
+              </div>
+              <p className="mt-3 text-sm text-muted">No card needed. Cancel any time.</p>
             </div>
-            <p className="mt-3 text-sm text-muted">No card needed. Cancel any time.</p>
-          </div>
-          <HeroCasePreview />
-        </section>
+            <Reveal delay={0.25}>
+              <HeroCasePreview />
+            </Reveal>
+          </section>
+        </div>
 
         {/* Problem */}
         <section aria-labelledby="problem-heading" className="border-y border-line bg-surface">
@@ -132,8 +144,10 @@ export default function Home() {
             </h2>
             <ul className="mt-6 grid gap-4 md:grid-cols-3">
               {stats.map((stat) => (
-                <li key={stat.value} className="rounded-xl bg-paper p-6 text-center">
-                  <p className="font-serif text-4xl font-semibold text-primary">{stat.value}</p>
+                <li key={stat.value} className="lift rounded-xl bg-paper p-6 text-center">
+                  <p className="font-serif text-4xl font-semibold text-primary">
+                    <CountUp value={stat.value} />
+                  </p>
                   <p className="mt-1 font-medium text-ink">{stat.label}</p>
                   <a
                     href={stat.href}
@@ -173,14 +187,19 @@ export default function Home() {
           </div>
           <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((step, index) => (
-              <li key={step.title} className="rounded-xl border border-line bg-surface p-6">
+              <Reveal
+                as="li"
+                key={step.title}
+                delay={index * 0.08}
+                className="lift rounded-xl border border-line bg-surface p-6"
+              >
                 <span className="flex size-10 items-center justify-center rounded-lg bg-primary-tint text-primary">
                   <step.icon aria-hidden className="size-5" />
                 </span>
                 <p className="mt-4 label-caps text-muted">Step {index + 1}</p>
                 <h3 className="mt-1 text-headline-sm">{step.title}</h3>
                 <p className="mt-2 text-sm text-muted">{step.body}</p>
-              </li>
+              </Reveal>
             ))}
           </ol>
         </section>
@@ -271,7 +290,7 @@ export default function Home() {
               <li
                 key={plan.name}
                 className={cn(
-                  "relative flex flex-col rounded-xl border bg-surface p-6",
+                  "relative flex lift flex-col rounded-xl border bg-surface p-6",
                   plan.popular ? "border-2 border-primary" : "border-line",
                 )}
               >

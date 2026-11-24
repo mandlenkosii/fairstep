@@ -1,7 +1,6 @@
 import {
   AlertTriangle,
   ArrowLeft,
-  CheckCircle2,
   ExternalLink,
   FileText,
   Gavel,
@@ -10,6 +9,7 @@ import {
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Toast } from "@/components/motion/toast";
 import { EvidenceUploader } from "@/components/incidents/evidence-uploader";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
@@ -79,15 +79,7 @@ export default async function IncidentPage({
         Incidents
       </Link>
 
-      {saved === "logged" && (
-        <p
-          role="status"
-          className="mt-4 flex items-center gap-2 rounded-lg bg-success-tint px-3 py-2 text-sm text-success-strong"
-        >
-          <CheckCircle2 aria-hidden className="size-4" />
-          Incident logged.
-        </p>
-      )}
+      {saved === "logged" && <Toast>Incident logged. Well done for writing it down today.</Toast>}
       {evidence === "failed" && (
         <p
           role="alert"

@@ -1,4 +1,5 @@
-import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { AlertCircle } from "lucide-react";
+import { Toast } from "@/components/motion/toast";
 
 const DONE: Record<string, string> = {
   assigned: "Consultant assigned. They can now see and review this business’s cases.",
@@ -27,13 +28,5 @@ export function AdminNotice({ done, error }: { done?: unknown; error?: unknown }
     );
   }
   if (!success) return null;
-  return (
-    <p
-      role="status"
-      className="mt-4 flex items-center gap-2 rounded-lg bg-success-tint px-3 py-2 text-sm text-success-strong"
-    >
-      <CheckCircle2 aria-hidden className="size-4 shrink-0" />
-      {success}
-    </p>
-  );
+  return <Toast>{success}</Toast>;
 }
