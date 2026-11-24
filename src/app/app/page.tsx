@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ActivityHeatmap } from "@/components/cases/activity-heatmap";
 import { Stepper } from "@/components/stepper/stepper";
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
@@ -46,6 +47,11 @@ const TONE: Record<AttentionItem["tone"], string> = {
   info: "bg-info-tint text-info",
 };
 
+/** The ISO timestamp `weeks` weeks before now, for the record heatmap query. */
+function weeksAgo(weeks: number) {
+  return new Date(Date.now() - weeks * 7 * 24 * 60 * 60 * 1000).toISOString();
+}
+
 function greeting(now: Date) {
   const hour = (now.getUTCHours() + 2) % 24;
   return hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
@@ -55,7 +61,14 @@ export default async function OwnerDashboardPage() {
   // Checked again here: layouts don't re-run on every navigation.
   const { user, business } = await requireOwnerBusiness();
   const supabase = await createClient();
-  const [{ data: rows }, { data: incidents }, { count: employeeCount }] = await Promise.all([
+  const since = weeksAgo(13);
+  const [
+    { data: rows },
+    { data: incidents },
+    { count: employeeCount },
+    { data: recentEvents },
+    { data: recentIncidents },
+  ] = await Promise.all([
     supabase
       .from("cases")
       .select(
@@ -78,7 +91,20 @@ export default async function OwnerDashboardPage() {
       .select("id", { count: "exact", head: true })
       .eq("business_id", business.id)
       .eq("status", "active"),
+    supabase
+      .from("case_events")
+      .select("created_at")
+      .eq("business_id", business.id)
+      .gte("created_at", since),
+    supabase
+      .from("incidents")
+      .select("created_at")
+      .eq("business_id", business.id)
+      .gte("created_at", since),
   ]);
+  const recordTimestamps = [...(recentEvents ?? []), ...(recentIncidents ?? [])].map(
+    (r) => r.created_at,
+  );
 
   const now = new Date();
   const cases: (DashboardCase & { category: string })[] = (rows ?? []).map((row) => {
@@ -256,46 +282,49 @@ export default async function OwnerDashboardPage() {
               </Card>
             </div>
 
-            <Card className="self-start">
-              <CardTitle className="flex items-center gap-2">
-                <Flag aria-hidden className="size-5" />
-                Recent incidents
-              </CardTitle>
-              {incidents?.length ? (
-                <ul className="mt-4 flex flex-col divide-y divide-line">
-                  {incidents.map((incident) => {
-                    const employee = one(incident.employee);
-                    const kase = one(incident.cases);
-                    return (
-                      <li key={incident.id} className="py-3 first:pt-0">
-                        <Link
-                          href={`/app/incidents/${incident.id}`}
-                          className="font-semibold underline-offset-2 hover:underline"
-                        >
-                          {CATEGORY_LABEL[incident.category as IncidentCategory]}
-                        </Link>
-                        <p className="text-sm text-muted">
-                          {employee ? `${employee.first_name} ${employee.last_name}` : ""} ·{" "}
-                          {formatDateTime(incident.occurred_at)}
-                        </p>
-                        <p className="mt-1 text-sm">
-                          {kase ? (
-                            <Badge tone="primary">{kase.reference}</Badge>
-                          ) : (
-                            <span className="text-muted">No case</span>
-                          )}
-                        </p>
-                      </li>
-                    );
-                  })}
-                </ul>
-              ) : (
-                <p className="mt-2 text-muted">No incidents logged yet.</p>
-              )}
-              <ButtonLink href="/app/incidents" variant="secondary" className="mt-4 w-full">
-                All incidents
-              </ButtonLink>
-            </Card>
+            <div className="flex flex-col gap-6 self-start">
+              <Card>
+                <CardTitle className="flex items-center gap-2">
+                  <Flag aria-hidden className="size-5" />
+                  Recent incidents
+                </CardTitle>
+                {incidents?.length ? (
+                  <ul className="mt-4 flex flex-col divide-y divide-line">
+                    {incidents.map((incident) => {
+                      const employee = one(incident.employee);
+                      const kase = one(incident.cases);
+                      return (
+                        <li key={incident.id} className="py-3 first:pt-0">
+                          <Link
+                            href={`/app/incidents/${incident.id}`}
+                            className="font-semibold underline-offset-2 hover:underline"
+                          >
+                            {CATEGORY_LABEL[incident.category as IncidentCategory]}
+                          </Link>
+                          <p className="text-sm text-muted">
+                            {employee ? `${employee.first_name} ${employee.last_name}` : ""} ·{" "}
+                            {formatDateTime(incident.occurred_at)}
+                          </p>
+                          <p className="mt-1 text-sm">
+                            {kase ? (
+                              <Badge tone="primary">{kase.reference}</Badge>
+                            ) : (
+                              <span className="text-muted">No case</span>
+                            )}
+                          </p>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <p className="mt-2 text-muted">No incidents logged yet.</p>
+                )}
+                <ButtonLink href="/app/incidents" variant="secondary" className="mt-4 w-full">
+                  All incidents
+                </ButtonLink>
+              </Card>
+              <ActivityHeatmap timestamps={recordTimestamps} />
+            </div>
           </div>
         </>
       )}

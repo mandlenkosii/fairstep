@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
@@ -20,12 +21,22 @@ export function SidebarNav({ role }: { role: Role }) {
             href={item.href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors",
-              active ? "bg-primary-tint text-primary" : "text-ink hover:bg-paper",
+              "relative flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors",
+              active ? "text-primary" : "text-ink hover:bg-paper",
             )}
           >
-            <Icon aria-hidden className="size-5" />
-            {item.label}
+            {active && (
+              // Slides from the old item to the new one when you change page.
+              <motion.span
+                layoutId="sidebar-active"
+                className="absolute inset-0 rounded-lg bg-primary-tint"
+                transition={{ type: "spring", stiffness: 420, damping: 36 }}
+              >
+                <span className="absolute top-2.5 bottom-2.5 left-0 w-1 rounded-r-full bg-accent" />
+              </motion.span>
+            )}
+            <Icon aria-hidden className="relative size-5" />
+            <span className="relative">{item.label}</span>
           </Link>
         );
       })}
