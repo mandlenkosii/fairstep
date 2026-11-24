@@ -14,6 +14,7 @@ FairStep helps small business owners run fair, fully documented disciplinary pro
 | Product requirements    | [docs/PRD.md](docs/PRD.md) (roles, rules R1–R11, data model, permission matrix)                                        |
 | Implementation plan     | [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)                                                                       |
 | QA checklist            | [docs/QA.md](docs/QA.md)                                                                                               |
+| Demo video (Loom)       | Script: [docs/LOOM_SCRIPT.md](docs/LOOM_SCRIPT.md) · video link added on submission                                    |
 
 <p>
   <img src="docs/screenshots/owner-dashboard-desktop.png" alt="Owner dashboard on desktop: open cases, hearings this week, cases documented, needs your attention and active cases with progress steppers" width="74%">
