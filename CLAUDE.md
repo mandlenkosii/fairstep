@@ -11,7 +11,8 @@ Key docs: [BUSINESS.md](BUSINESS.md), [docs/PRD.md](docs/PRD.md) (roles, rules R
 **Phase 2 (done):** IMPLEMENTATION_PLAN.md, issues #1–#34 with labels and 6 milestones, scaffold, CI, design tokens, UI components, stepper, app shell, landing page, log-in/sign-up screens (PRs #35–#43).
 **Phase 3 (done):** workflow rules R1–R11, Supabase clients, schema, RLS, private storage, auth, proxy route protection, seed with 3 test logins, RLS tests in CI (PRs #47–#55). Hosted Supabase project is migrated and seeded.
 **Phase 4 (done):** live at https://fairstep.vercel.app (Vercel, auto-deploys main + PR previews); employee register, incident log with private evidence (browser uploads straight to storage, then `recordEvidence`), start a case + case page with stepper, blocked reasons and timeline (PRs #57–#60).
-**Phase 5 (next):** issues #24–#31 (step forms, PDFs, consultant review, timeline + bundle, admin, owner dashboard, states/polish incl. responsive, Playwright e2e).
+**Phase 5 (done):** step forms, PDF letters, consultant review, timeline + CCMA bundle, admin, owner dashboard, states + responsive polish, Playwright e2e in CI (PRs #62–#69). UI humanized with `motion` (PR #71), keeping teal + ochre.
+**Phase 6 (done):** README with live screenshots, docs/QA.md (live QA + axe), docs/LOOM_SCRIPT.md, docs/SUBMISSION.md (PRs #73–#76). Left for Mandla: record the Loom, add Loom + portfolio repo links, post. Further UI changes wait for Mandla’s instructions.
 
 | Phase | Due (SAST) | Scope |
 |---|---|---|
