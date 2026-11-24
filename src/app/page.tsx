@@ -1,11 +1,9 @@
 import { Check, Download, FileText, ListChecks, NotebookPen } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
-import {
-  BlockedStepPreview,
-  HeroCasePreview,
-  ReviewPreview,
-} from "@/components/marketing/product-previews";
+import { BlockedStepPreview, ReviewPreview } from "@/components/marketing/product-previews";
+import { HeroVisual } from "@/components/marketing/hero-visual";
+import { ScreensGallery } from "@/components/marketing/screens-gallery";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { Aurora } from "@/components/motion/aurora";
 import { CountUp } from "@/components/motion/count-up";
@@ -107,6 +105,22 @@ export default function Home() {
         {/* Hero */}
         <div className="relative isolate overflow-hidden">
           <Aurora />
+          <div aria-hidden className="absolute inset-0 -z-10 dot-grid" />
+          {/* Decorative wordmark, drawn as an image so it isn't read or contrast-checked as text. */}
+          <svg
+            aria-hidden
+            viewBox="0 0 1000 230"
+            className="pointer-events-none absolute inset-x-0 -bottom-[4vw] -z-10 w-full select-none"
+          >
+            <text
+              x="500"
+              y="200"
+              textAnchor="middle"
+              className="fill-primary/[0.05] font-serif text-[250px] font-semibold tracking-tight"
+            >
+              FairStep
+            </text>
+          </svg>
           <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-12 md:grid-cols-[1.1fr_1fr] md:px-8 md:py-20">
             <div>
               <Badge tone="primary">Built for South African small businesses</Badge>
@@ -130,9 +144,7 @@ export default function Home() {
               </div>
               <p className="mt-3 text-sm text-muted">No card needed. Cancel any time.</p>
             </div>
-            <Reveal delay={0.25}>
-              <HeroCasePreview />
-            </Reveal>
+            <HeroVisual />
           </section>
         </div>
 
@@ -202,6 +214,25 @@ export default function Home() {
               </Reveal>
             ))}
           </ol>
+        </section>
+
+        {/* The real product */}
+        <section aria-labelledby="screens-heading" className="overflow-hidden py-16">
+          <div className="mx-auto max-w-6xl px-4 md:px-8">
+            <div className="mx-auto max-w-2xl text-center">
+              <p className="label-caps text-primary">The real thing, not a mock-up</p>
+              <h2 id="screens-heading" className="mt-2 text-headline-lg md:text-display">
+                One calm place for every case
+              </h2>
+              <p className="mt-3 text-muted">
+                Owners run the process, consultants sign it off, and admins see the numbers. These
+                are live screens from FairStep.
+              </p>
+            </div>
+            <div className="mt-12">
+              <ScreensGallery />
+            </div>
+          </div>
         </section>
 
         {/* Guardrail */}

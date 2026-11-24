@@ -196,3 +196,10 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Fine dot grid, like squared paper, fading out towards the edges. */
+@utility dot-grid {
+  background-image: radial-gradient(rgb(28 43 42 / 0.13) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 30%, transparent 80%);
+}

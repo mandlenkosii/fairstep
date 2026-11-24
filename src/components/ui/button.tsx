@@ -9,8 +9,11 @@ const base =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 font-semibold transition-[color,background-color,border-color,box-shadow,transform] duration-150 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-primary text-white hover:bg-primary-hover",
-  secondary: "border border-line bg-surface text-ink hover:bg-paper",
+  // Tactile: a soft top highlight, a crisp edge and a teal glow underneath.
+  primary:
+    "bg-gradient-to-b from-[#16706b] to-primary text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.22),0_1px_2px_rgb(10_71_68/0.4),0_8px_18px_-8px_rgb(14_94_90/0.65)] hover:from-primary hover:to-primary-hover",
+  secondary:
+    "border border-line bg-surface text-ink shadow-[inset_0_-1px_0_rgb(28_43_42/0.06),0_1px_2px_rgb(28_43_42/0.06)] hover:border-primary/30 hover:bg-paper",
   ghost: "text-primary hover:bg-primary-tint",
   danger: "bg-danger text-white hover:bg-danger/90",
 };

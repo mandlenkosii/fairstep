@@ -11,7 +11,7 @@ describe("Button", () => {
     const onClick = vi.fn();
     render(<Button onClick={onClick}>Save incident</Button>);
     const button = screen.getByRole("button", { name: "Save incident" });
-    expect(button).toHaveClass("bg-primary");
+    expect(button).toHaveClass("to-primary");
     expect(button).toHaveAttribute("type", "button");
     await userEvent.click(button);
     expect(onClick).toHaveBeenCalledOnce();
