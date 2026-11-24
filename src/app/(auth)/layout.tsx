@@ -1,6 +1,8 @@
 import { ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
+import { Aurora } from "@/components/motion/aurora";
+import { Reveal } from "@/components/motion/reveal";
 import { Disclaimer } from "@/components/shell/disclaimer";
 import { Stepper, type StepperStep } from "@/components/stepper/stepper";
 
@@ -33,7 +35,8 @@ export default function AuthLayout({ children }: LayoutProps<"/">) {
   return (
     <div className="flex flex-1 flex-col">
       <div className="mx-auto grid w-full max-w-6xl flex-1 md:grid-cols-2 md:px-8 md:py-12">
-        <aside className="hidden flex-col rounded-l-2xl bg-primary p-10 text-white md:flex">
+        <aside className="relative isolate hidden flex-col overflow-hidden rounded-l-2xl bg-primary p-10 text-white md:flex">
+          <Aurora tone="dark" />
           <Link href="/" className="inline-flex items-center gap-2" aria-label="FairStep home">
             <Logo showWordmark={false} className="size-9 rounded-lg bg-paper p-1" />
             <span className="font-serif text-headline-md font-semibold">FairStep</span>
@@ -46,9 +49,12 @@ export default function AuthLayout({ children }: LayoutProps<"/">) {
           <p className="mt-3 text-white/80">
             A calm, guided disciplinary process for South African small businesses.
           </p>
-          <div className="mt-10 rounded-xl bg-surface p-5 text-ink">
+          <Reveal
+            delay={0.15}
+            className="mt-10 rounded-xl bg-surface p-5 text-ink shadow-[0_20px_40px_-20px_rgb(0_0_0/0.45)]"
+          >
             <Stepper steps={pathway} vertical />
-          </div>
+          </Reveal>
           <p className="mt-auto flex items-center gap-2 pt-8 text-sm text-white/80">
             <ShieldCheck aria-hidden className="size-4" />
             Based on the Code of Good Practice: Dismissal (2025)

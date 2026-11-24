@@ -71,3 +71,128 @@
 @utility label-caps {
   @apply text-xs font-semibold tracking-[0.04em] uppercase;
 }
+
+/*
+ * Motion. Calm and short: it should help people notice things, never distract.
+ * Patterns inspired by transitions.dev (error shake, skeleton shimmer, page fade)
+ * and Aceternity UI (aurora background), rebuilt in FairStep's teal and ochre.
+ */
+@theme {
+  --animate-page-in: page-in 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-shake: shake 0.36s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
+  --animate-rise: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-drift: drift 18s ease-in-out infinite alternate;
+  --animate-drift-slow: drift 26s ease-in-out infinite alternate-reverse;
+
+  @keyframes page-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes shake {
+    10%,
+    90% {
+      transform: translateX(-1px);
+    }
+    20%,
+    80% {
+      transform: translateX(2px);
+    }
+    30%,
+    50%,
+    70% {
+      transform: translateX(-3px);
+    }
+    40%,
+    60% {
+      transform: translateX(3px);
+    }
+  }
+  @keyframes shimmer {
+    from {
+      background-position: 200% 0;
+    }
+    to {
+      background-position: -200% 0;
+    }
+  }
+  @keyframes pulse-ring {
+    0% {
+      box-shadow: 0 0 0 0 rgb(201 134 26 / 0.45);
+    }
+    70%,
+    100% {
+      box-shadow: 0 0 0 10px rgb(201 134 26 / 0);
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes drift {
+    from {
+      transform: translate3d(-4%, -2%, 0) scale(1);
+    }
+    to {
+      transform: translate3d(5%, 4%, 0) scale(1.12);
+    }
+  }
+}
+
+@layer base {
+  /* A small shake the moment a field becomes invalid, so the error is noticed. */
+  input[aria-invalid="true"],
+  textarea[aria-invalid="true"],
+  select[aria-invalid="true"] {
+    animation: var(--animate-shake);
+  }
+}
+
+/* Loading placeholder with a soft light sweeping across. */
+@utility skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-line) 0%,
+    color-mix(in srgb, var(--color-line) 40%, white) 50%,
+    var(--color-line) 100%
+  );
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+}
+
+/* Cards people can click: lift slightly on hover. */
+@utility lift {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px -12px rgb(14 94 90 / 0.35);
+  }
+}
+
+/* Anyone who asked their device for less motion gets none. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

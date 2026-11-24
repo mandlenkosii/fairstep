@@ -1,5 +1,6 @@
 import { ChevronRight, Search, UserPlus, Users } from "lucide-react";
 import type { Metadata } from "next";
+import { EmptyIllustration } from "@/components/states/empty-state";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
@@ -98,7 +99,7 @@ export default async function EmployeesPage({ searchParams }: PageProps<"/app/em
 
       {employees.length === 0 ? (
         <Card className="mt-6 flex flex-col items-center py-12 text-center">
-          <Users aria-hidden className="size-10 text-muted" />
+          <EmptyIllustration icon={Users} />
           {query ? (
             <>
               <p className="mt-3 font-semibold">No employees match “{query}”</p>

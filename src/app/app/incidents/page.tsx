@@ -1,5 +1,6 @@
 import { ChevronRight, Flag, Paperclip, Plus } from "lucide-react";
 import type { Metadata } from "next";
+import { EmptyIllustration } from "@/components/states/empty-state";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
@@ -40,8 +41,8 @@ export default async function IncidentsPage() {
 
       {incidents.length === 0 ? (
         <Card className="mt-6 flex flex-col items-center py-12 text-center">
-          <Flag aria-hidden className="size-10 text-muted" />
-          <p className="mt-3 font-semibold">No incidents logged</p>
+          <EmptyIllustration icon={Flag} />
+          <p className="mt-5 font-serif text-headline-sm font-semibold">No incidents logged</p>
           <p className="mt-1 max-w-sm text-muted">
             When something happens at work, log it the same day. Most incidents never become a case,
             but the record protects you if one does.

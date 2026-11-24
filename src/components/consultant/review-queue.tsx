@@ -1,5 +1,6 @@
 import { ChevronRight, ClipboardCheck } from "lucide-react";
 import Link from "next/link";
+import { EmptyIllustration } from "@/components/states/empty-state";
 import { Stepper } from "@/components/stepper/stepper";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -83,8 +84,8 @@ export async function ReviewQueue({ tab, basePath }: { tab: QueueTab; basePath: 
 
       {shown.length === 0 ? (
         <Card className="mt-6 flex flex-col items-center py-12 text-center">
-          <ClipboardCheck aria-hidden className="size-10 text-muted" />
-          <p className="mt-3 font-semibold">
+          <EmptyIllustration icon={ClipboardCheck} />
+          <p className="mt-5 font-serif text-headline-sm font-semibold">
             {tab === "pending_review" ? "Nothing waiting for review" : "No cases here"}
           </p>
           <p className="mt-1 max-w-sm text-muted">
@@ -102,7 +103,7 @@ export async function ReviewQueue({ tab, basePath }: { tab: QueueTab; basePath: 
             const review = REVIEW_STATUS[kase.review_status] ?? REVIEW_STATUS.not_requested;
             return (
               <li key={kase.id}>
-                <Card className="relative hover:border-primary/40">
+                <Card className="relative lift hover:border-primary/40">
                   <div className="flex flex-wrap items-start gap-4">
                     <span
                       aria-hidden
