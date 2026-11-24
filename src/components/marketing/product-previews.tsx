@@ -17,7 +17,7 @@ export function HeroCasePreview() {
   return (
     <div
       aria-hidden
-      className="mx-auto w-full max-w-sm rounded-[2rem] border-8 border-ink bg-paper p-4 shadow-xl"
+      className="relative z-10 mx-auto w-full max-w-sm rounded-[2rem] border-8 border-ink bg-paper p-4 shadow-xl"
     >
       <div className="rounded-xl border border-line bg-surface p-4">
         <div className="mb-4 flex items-start justify-between gap-2">
