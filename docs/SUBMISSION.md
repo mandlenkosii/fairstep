@@ -1,6 +1,6 @@
 # Final submission post
 
-Fill in the two `<…>` links, then copy the block below into Discord.
+Copy the block below into Discord.
 
 ```
 **Final submission · Mandla Sikhosana**
@@ -11,9 +11,10 @@ Fill in the two `<…>` links, then copy the block below into Discord.
 
 **Capstone repo:** https://github.com/mandlenkosii/fairstep
 **Capstone live link:** https://fairstep.vercel.app
-**Loom link:** <your Loom link>
+**Loom (part 1):** https://www.loom.com/share/73d7d5f1033e4d908461d8149f098fe0
+**Loom (part 2):** https://www.loom.com/share/39a89cfeb0a240ce8e68cab05f4e76d0
 **Portfolio live link:** https://myportfoliowebsite-snowy.vercel.app/
-**Portfolio repo:** <your portfolio repo link>
+**Portfolio repo:** https://github.com/mandlenkosii/myportfoliowebsite
 
 **Test logins** (password `FairStep-demo-2026`):
 - Owner: thabo@kasikitchen.test
@@ -23,7 +24,7 @@ Fill in the two `<…>` links, then copy the block below into Discord.
 
 ## Before you post
 
-- [ ] Loom recorded (about 5 minutes) and set to "Anyone with the link can view"
+- [x] Loom recorded (about 5 minutes) and set to "Anyone with the link can view"
 - [ ] Open the Loom link in a private window to check it plays
-- [ ] Portfolio repo link added
+- [x] Portfolio repo link added
 - [ ] Stitch link opens without signing in (it's in the README)
