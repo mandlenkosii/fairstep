@@ -203,6 +203,36 @@ Work went through **GitHub Issues → feature branches → pull requests → mer
 
 **Designs:** Google Stitch exports are in [`docs/designs/`](docs/designs/), with the design system in [`design-system.md`](docs/designs/design-system.md). Where generated design copy conflicted with the PRD, the PRD won: the app refers to the 2025 _Code of Good Practice: Dismissal_ (not "Schedule 8"), uses "2 working days' notice" (not "48 hours"), and makes no "tamper-proof" or certification claims.
 
+## Roadmap: coming soon
+
+Phases 1–6 delivered the app above. The next phases automate the reminding and paperwork, using the dates and rules FairStep already tracks. **Automation reminds, drafts and prepares; a person still decides every step**, `canTransition` still runs on the server before any change, and every automatic action is logged on the case timeline as "FairStep (automatic)".
+
+### Phase 7: Reminders and automatic letters
+- **Deadline reminders** by email (and later WhatsApp): hearing tomorrow, appeal window closing, warning about to expire, earliest date a notice can be given. A daily scheduled job (Supabase `pg_cron` or Vercel Cron) reuses `appealDeadline`, `warningExpiry` and `earliestHearingDate`.
+- **Letters generated on save:** the notice of hearing, outcome letter and appeal outcome are created as soon as their step is saved, using the existing `buildLetter`.
+- **Calendar invite** (.ics) for every hearing.
+
+### Phase 8: Consultant workflow
+- **Auto-send for review** before the notice and outcome steps, if the owner switches it on.
+- **Instant alerts:** consultants hear about new review requests, and owners about changes requested and approvals.
+- **Chasers** when a review has waited more than 24 hours.
+- **Weekly digest:** a Monday email with open cases, hearings this week and blocked steps (for owners), and a summary across all clients (for consultants).
+
+### Phase 9: Smarter records
+- **Pattern alerts:** suggests opening a case when incidents repeat (e.g. 3 late comings in 30 days). It only suggests; the owner decides.
+- **Close-out on its own:** the CCMA bundle is built and stored when a case closes, and warnings are marked expired after 6 or 12 months.
+- **POPIA retention:** closed cases are archived after a set period (archived, never deleted).
+- **Evidence processing:** uploads are compressed, virus-scanned and made searchable.
+- **AI drafting help (Claude API):** turns an incident description into clear allegations, summarises a case for the consultant and flags gaps such as "no witness recorded". It drafts and the owner approves; it never decides an outcome.
+
+### Phase 10: Business and platform
+- **Billing:** subscriptions at R149, R299 and R799 (e.g. Paystack), with trial-ending emails.
+- **Consultant matching:** new businesses are assigned to a partner consultant.
+- **Monthly admin report** with counts only.
+- **Keeping it healthy:** a nightly read-only smoke test of the live site, Dependabot updates, scheduled database backups, and a yearly reminder to add the next year's SA public holidays.
+
+Employee contact details (such as WhatsApp numbers) are only added with consent and when a case needs them (POPIA).
+
 ## Known issues and limits
 
 - **Not built (Should/Could):** email notifications (S2), employee acknowledgement links (S3), Afrikaans/isiZulu labels, WhatsApp reminders; the admin audit-log screen from the designs (each case has its own timeline instead).
